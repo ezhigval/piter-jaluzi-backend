@@ -1,0 +1,536 @@
+2026-04-02 03:14:33 +03:00: ✅ Database initialized
+2026-04-02 03:14:33 +03:00: 
+2026-04-02 03:14:33 +03:00: 🚀 Backend running on port 3001
+2026-04-02 03:14:33 +03:00: 📁 Uploads: http://localhost:3001/uploads/products
+2026-04-02 03:14:33 +03:00: 📡 CORS: http://localhost:4321
+2026-04-02 03:14:33 +03:00: 🤖 Telegram: ✅
+2026-04-02 03:14:33 +03:00: ✉️ Email: ✅
+2026-04-02 03:14:33 +03:00: 📍 API: http://localhost:3001/api
+2026-04-02 03:14:33 +03:00: 
+2026-04-02 03:14:33 +03:00: 🤖 Telegram bot initialized
+2026-04-02 03:14:45 +03:00: 2026-04-02T00:14:45.666Z GET /api/reviews
+2026-04-02 03:14:52 +03:00: 2026-04-02T00:14:52.083Z GET /api/reviews/works
+2026-04-02 03:17:44 +03:00: ✅ Database initialized
+2026-04-02 03:17:45 +03:00: 
+2026-04-02 03:17:45 +03:00: 🚀 Backend running on port 3001
+2026-04-02 03:17:45 +03:00: 📁 Uploads: http://localhost:3001/uploads/products
+2026-04-02 03:17:45 +03:00: 📡 CORS: http://localhost:4321
+2026-04-02 03:17:45 +03:00: 🤖 Telegram: ✅
+2026-04-02 03:17:45 +03:00: ✉️ Email: ✅
+2026-04-02 03:17:45 +03:00: 📍 API: http://localhost:3001/api
+2026-04-02 03:17:45 +03:00: 
+2026-04-02 03:17:45 +03:00: 🤖 Telegram bot initialized
+2026-04-02 03:20:12 +03:00: 2026-04-02T00:20:12.396Z GET /api/products
+2026-04-02 03:20:19 +03:00: ✅ Database initialized
+2026-04-02 03:20:20 +03:00: 
+2026-04-02 03:20:20 +03:00: 🚀 Backend running on port 3001
+2026-04-02 03:20:20 +03:00: 📁 Uploads: http://localhost:3001/uploads/products
+2026-04-02 03:20:20 +03:00: 📡 CORS: http://localhost:4321
+2026-04-02 03:20:20 +03:00: 🤖 Telegram: ✅
+2026-04-02 03:20:20 +03:00: ✉️ Email: ✅
+2026-04-02 03:20:20 +03:00: 📍 API: http://localhost:3001/api
+2026-04-02 03:20:20 +03:00: 
+2026-04-02 03:20:20 +03:00: 🤖 Telegram bot initialized
+2026-04-02 03:20:22 +03:00: 2026-04-02T00:20:22.909Z GET /api/products
+2026-04-02 03:21:53 +03:00: ✅ Database initialized
+2026-04-02 03:21:53 +03:00: 
+2026-04-02 03:21:53 +03:00: 🚀 Backend running on port 3001
+2026-04-02 03:21:53 +03:00: 📁 Uploads: http://localhost:3001/uploads/products
+2026-04-02 03:21:53 +03:00: 📡 CORS: http://localhost:4321
+2026-04-02 03:21:53 +03:00: 🤖 Telegram: ✅
+2026-04-02 03:21:53 +03:00: ✉️ Email: ✅
+2026-04-02 03:21:53 +03:00: 📍 API: http://localhost:3001/api
+2026-04-02 03:21:53 +03:00: 
+2026-04-02 03:21:54 +03:00: 🤖 Telegram bot initialized
+2026-04-02 03:22:34 +03:00: 2026-04-02T00:22:34.983Z GET /api/products
+2026-04-02 03:23:19 +03:00: 2026-04-02T00:23:19.317Z GET /api/products
+2026-04-02 03:24:37 +03:00: 2026-04-02T00:24:37.289Z GET /api/products
+2026-04-02 03:25:46 +03:00: 2026-04-02T00:25:46.574Z GET /api/products
+2026-04-02 03:25:55 +03:00: 2026-04-02T00:25:55.484Z GET /api/products
+2026-04-02 03:26:38 +03:00: 2026-04-02T00:26:38.535Z GET /api/products
+2026-04-02 03:26:50 +03:00: 2026-04-02T00:26:50.256Z GET /api/products
+2026-04-02 03:27:01 +03:00: 2026-04-02T00:27:01.279Z POST /api/orders
+2026-04-02 03:27:01 +03:00: 
+2026-04-02 03:27:01 +03:00: 📥 ===== POST /api/orders =====
+2026-04-02 03:27:01 +03:00:    Body: {
+2026-04-02 03:27:01 +03:00:   "name": "куку",
+2026-04-02 03:27:01 +03:00:   "phone": "куку",
+2026-04-02 03:27:01 +03:00:   "blindsType": "horizontal",
+2026-04-02 03:27:01 +03:00:   "message": "укку"
+2026-04-02 03:27:01 +03:00: }
+2026-04-02 03:27:01 +03:00:    ✅ Order saved to DB: 1775089621281
+2026-04-02 03:27:01 +03:00:    📬 Sending Telegram...
+2026-04-02 03:27:01 +03:00: [TG Notify] Starting...
+2026-04-02 03:27:01 +03:00: [TG Notify] ✅ Bot instance OK
+2026-04-02 03:27:01 +03:00: [TG Notify] Authorized chats: [ 1034074077 ]
+2026-04-02 03:27:01 +03:00: [TG Notify] Sending to chat 1034074077...
+2026-04-02 03:27:01 +03:00: [TG Notify] ✅ Sent to 1034074077
+2026-04-02 03:27:01 +03:00: [TG Notify] Result: { success: true, sent: 1, failed: 0 }
+2026-04-02 03:27:01 +03:00:    📬 Telegram: { success: true, sent: 1, failed: 0 }
+2026-04-02 03:27:01 +03:00:    ✉️ Sending Email...
+2026-04-02 03:27:02 +03:00:    ✉️ Email: { success: false, error: 'connect ECONNREFUSED 172.253.152.109:587' }
+2026-04-02 03:27:02 +03:00: 📥 ===== End =====
+2026-04-02 03:27:02 +03:00: 
+2026-04-02 03:27:11 +03:00: 2026-04-02T00:27:11.103Z GET /api/products
+2026-04-02 03:27:30 +03:00: 2026-04-02T00:27:30.244Z GET /api/products
+2026-04-02 03:27:40 +03:00: 2026-04-02T00:27:40.070Z GET /api/reviews/works
+2026-04-02 03:27:40 +03:00: 2026-04-02T00:27:40.071Z GET /api/reviews
+2026-04-02 03:28:01 +03:00: 2026-04-02T00:28:01.626Z POST /api/reviews
+2026-04-02 03:28:03 +03:00: 2026-04-02T00:28:03.668Z GET /api/reviews/works
+2026-04-02 03:28:03 +03:00: 2026-04-02T00:28:03.670Z GET /api/reviews
+2026-04-02 03:28:18 +03:00: 2026-04-02T00:28:18.515Z GET /api/reviews/works
+2026-04-02 03:28:18 +03:00: 2026-04-02T00:28:18.519Z GET /api/reviews
+2026-04-02 03:29:15 +03:00: 2026-04-02T00:29:15.574Z GET /api/reviews/works
+2026-04-02 03:29:15 +03:00: 2026-04-02T00:29:15.576Z GET /api/reviews
+2026-04-02 03:29:33 +03:00: 2026-04-02T00:29:33.522Z GET /api/reviews/works
+2026-04-02 03:29:33 +03:00: 2026-04-02T00:29:33.524Z GET /api/reviews
+2026-04-02 03:29:36 +03:00: 2026-04-02T00:29:36.570Z GET /api/reviews/works
+2026-04-02 03:29:36 +03:00: 2026-04-02T00:29:36.572Z GET /api/reviews
+2026-04-02 03:36:02 +03:00: ✅ Database initialized
+2026-04-02 03:36:02 +03:00: 
+2026-04-02 03:36:02 +03:00: 🚀 Backend running on port 3001
+2026-04-02 03:36:02 +03:00: 📁 Uploads: http://localhost:3001/uploads/products
+2026-04-02 03:36:02 +03:00: 📡 CORS: http://localhost:4321
+2026-04-02 03:36:02 +03:00: 🤖 Telegram: ✅
+2026-04-02 03:36:02 +03:00: ✉️ Email (outgoing): ✅
+2026-04-02 03:36:02 +03:00: 📬 Email (incoming): ✅
+2026-04-02 03:36:02 +03:00: 📍 API: http://localhost:3001/api
+2026-04-02 03:36:02 +03:00: 
+2026-04-02 03:36:02 +03:00: 🤖 Telegram bot initialized
+2026-04-02 03:36:06 +03:00: [connection] Connected to host
+2026-04-02 03:36:06 +03:00: <= '* OK Yandex IMAP4rev1 at mail-imap-production-main-274.klg.yp-c.yandex.net:993 ready to talk with ::ffff:185.77.216.28:27774, 2026-Apr-02 03:36:06, 6aPDxA6xPmI0'
+2026-04-02 03:36:06 +03:00: => 'A0 CAPABILITY'
+2026-04-02 03:36:06 +03:00: <= '* CAPABILITY IMAP4rev1 CHILDREN UNSELECT LITERAL+ NAMESPACE XLIST UIDPLUS ENABLE ID AUTH=PLAIN AUTH=XOAUTH2 IDLE MOVE'
+2026-04-02 03:36:06 +03:00: <= 'A0 OK CAPABILITY Completed.'
+2026-04-02 03:36:06 +03:00: => 'A1 LOGIN "info@prozhaluzi.ru" "your-app-password"'
+2026-04-02 03:36:06 +03:00: <= 'A1 NO [AUTHENTICATIONFAILED] LOGIN invalid credentials or IMAP is disabled sc=6aPDxA6xPmI0_2026-04-02-00-36_imap-production-main-274'
+2026-04-02 03:36:06 +03:00: [connection] Ended
+2026-04-02 03:36:06 +03:00: ⚠️  IMAP connection ended
+2026-04-02 03:36:06 +03:00: [connection] Closed
+2026-04-02 03:39:56 +03:00: ✅ Database initialized
+2026-04-02 03:39:56 +03:00: 
+2026-04-02 03:39:56 +03:00: 🚀 Backend running on port 3001
+2026-04-02 03:39:56 +03:00: 📁 Uploads: http://localhost:3001/uploads/products
+2026-04-02 03:39:56 +03:00: 📡 CORS: http://localhost:4321
+2026-04-02 03:39:56 +03:00: 🤖 Telegram: ✅
+2026-04-02 03:39:56 +03:00: ✉️ Email (outgoing): ✅
+2026-04-02 03:39:56 +03:00: 📬 Email (incoming): ✅
+2026-04-02 03:39:56 +03:00: 📨 Forward to: smailikin70@yandex.ru
+2026-04-02 03:39:56 +03:00: 📍 API: http://localhost:3001/api
+2026-04-02 03:39:56 +03:00: 
+2026-04-02 03:39:56 +03:00: 🤖 Telegram bot initialized
+2026-04-02 03:39:59 +03:00: 📬 Starting email listener for: info@prozhaluzi.ru
+2026-04-02 03:40:00 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:40:30 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:41:01 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:41:34 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:42:05 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:42:38 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:42:59 +03:00: 2026-04-02T00:42:59.338Z POST /api/orders
+2026-04-02 03:42:59 +03:00: 
+2026-04-02 03:42:59 +03:00: 📥 ===== POST /api/orders =====
+2026-04-02 03:42:59 +03:00:    Body: {
+2026-04-02 03:42:59 +03:00:   "name": "буба",
+2026-04-02 03:42:59 +03:00:   "phone": "биба",
+2026-04-02 03:42:59 +03:00:   "blindsType": "vertical",
+2026-04-02 03:42:59 +03:00:   "message": "боба"
+2026-04-02 03:42:59 +03:00: }
+2026-04-02 03:42:59 +03:00:    ✅ Order saved to DB: 1775090579339
+2026-04-02 03:42:59 +03:00:    📬 Sending Telegram...
+2026-04-02 03:42:59 +03:00: [TG Notify] Starting...
+2026-04-02 03:42:59 +03:00: [TG Notify] ✅ Bot instance OK
+2026-04-02 03:42:59 +03:00: [TG Notify] Authorized chats: [ 1034074077 ]
+2026-04-02 03:42:59 +03:00: [TG Notify] Sending to chat 1034074077...
+2026-04-02 03:42:59 +03:00: [TG Notify] ✅ Sent to 1034074077
+2026-04-02 03:42:59 +03:00: [TG Notify] Result: { success: true, sent: 1, failed: 0 }
+2026-04-02 03:42:59 +03:00:    📬 Telegram: { success: true, sent: 1, failed: 0 }
+2026-04-02 03:42:59 +03:00:    ✉️ Sending Email...
+2026-04-02 03:43:00 +03:00:    ✉️ Email: { success: false, error: 'connect ECONNREFUSED 77.88.21.158:465' }
+2026-04-02 03:43:00 +03:00: 📥 ===== End =====
+2026-04-02 03:43:00 +03:00: 
+2026-04-02 03:43:08 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:43:39 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:44:10 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:44:40 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:45:11 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:45:36 +03:00: ✅ Database initialized
+2026-04-02 03:45:36 +03:00: 
+2026-04-02 03:45:36 +03:00: 🚀 Backend running on port 3001
+2026-04-02 03:45:36 +03:00: 📁 Uploads: http://localhost:3001/uploads/products
+2026-04-02 03:45:36 +03:00: 📡 CORS: http://localhost:4321
+2026-04-02 03:45:36 +03:00: 🤖 Telegram: ✅
+2026-04-02 03:45:36 +03:00: ✉️ Email (outgoing): ✅
+2026-04-02 03:45:36 +03:00: 📬 Email (incoming): ✅
+2026-04-02 03:45:36 +03:00: 📨 Forward to: smailikin70@yandex.ru
+2026-04-02 03:45:36 +03:00: 📍 API: http://localhost:3001/api
+2026-04-02 03:45:36 +03:00: 
+2026-04-02 03:45:36 +03:00: 🤖 Telegram bot initialized
+2026-04-02 03:45:39 +03:00: 📬 Starting email listener for: info@prozhaluzi.ru
+2026-04-02 03:45:40 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:46:12 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:46:42 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:47:15 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:47:46 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:48:20 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:48:50 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:49:21 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:49:52 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:50:22 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:50:53 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:51:24 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:51:40 +03:00: ✅ Database initialized
+2026-04-02 03:51:40 +03:00: 
+2026-04-02 03:51:40 +03:00: 🚀 Backend running on port 3001
+2026-04-02 03:51:40 +03:00: 📁 Uploads: http://localhost:3001/uploads/products
+2026-04-02 03:51:40 +03:00: 📡 CORS: http://localhost:4321
+2026-04-02 03:51:40 +03:00: 🤖 Telegram: ✅
+2026-04-02 03:51:40 +03:00: ✉️ Email (outgoing): ✅
+2026-04-02 03:51:40 +03:00: 📬 Email (incoming): ✅
+2026-04-02 03:51:40 +03:00: 📨 Forward to: smailikin70@yandex.ru
+2026-04-02 03:51:40 +03:00: 📍 API: http://localhost:3001/api
+2026-04-02 03:51:40 +03:00: 
+2026-04-02 03:51:40 +03:00: 🤖 Telegram bot initialized
+2026-04-02 03:51:43 +03:00: 📬 Starting email listener for: info@prozhaluzi.ru
+2026-04-02 03:51:44 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:52:14 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:52:45 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:53:16 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:53:46 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:53:47 +03:00: 2026-04-02T00:53:47.575Z GET /api/reviews/works
+2026-04-02 03:53:47 +03:00: 2026-04-02T00:53:47.582Z GET /api/reviews
+2026-04-02 03:54:00 +03:00: 2026-04-02T00:54:00.523Z GET /api/reviews/works
+2026-04-02 03:54:00 +03:00: 2026-04-02T00:54:00.525Z GET /api/reviews
+2026-04-02 03:54:06 +03:00: 2026-04-02T00:54:06.514Z GET /api/reviews/works
+2026-04-02 03:54:06 +03:00: 2026-04-02T00:54:06.518Z GET /api/reviews
+2026-04-02 03:54:16 +03:00: 2026-04-02T00:54:16.502Z GET /api/reviews/works
+2026-04-02 03:54:16 +03:00: 2026-04-02T00:54:16.503Z GET /api/reviews
+2026-04-02 03:54:17 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:54:43 +03:00: 2026-04-02T00:54:43.506Z GET /api/reviews/works
+2026-04-02 03:54:43 +03:00: 2026-04-02T00:54:43.509Z GET /api/reviews
+2026-04-02 03:54:48 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:54:56 +03:00: 2026-04-02T00:54:56.576Z GET /api/reviews
+2026-04-02 03:54:56 +03:00: 2026-04-02T00:54:56.578Z GET /api/reviews/works
+2026-04-02 03:55:18 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:55:49 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:56:00 +03:00: 2026-04-02T00:56:00.525Z GET /api/reviews/works
+2026-04-02 03:56:00 +03:00: 2026-04-02T00:56:00.527Z GET /api/reviews
+2026-04-02 03:56:20 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:56:50 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:57:21 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:57:52 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:58:23 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:58:53 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:59:02 +03:00: 2026-04-02T00:59:02.507Z GET /api/reviews/works
+2026-04-02 03:59:02 +03:00: 2026-04-02T00:59:02.509Z GET /api/reviews
+2026-04-02 03:59:19 +03:00: 2026-04-02T00:59:19.017Z GET /api/reviews/works
+2026-04-02 03:59:19 +03:00: 2026-04-02T00:59:19.030Z GET /api/reviews
+2026-04-02 03:59:24 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 03:59:55 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:00:25 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:00:56 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:01:03 +03:00: 2026-04-02T01:01:03.659Z GET /api/reviews
+2026-04-02 04:01:03 +03:00: 2026-04-02T01:01:03.661Z GET /api/reviews/works
+2026-04-02 04:01:27 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:01:57 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:02:28 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:02:41 +03:00: 2026-04-02T01:02:41.603Z GET /api/reviews/works
+2026-04-02 04:02:41 +03:00: 2026-04-02T01:02:41.605Z GET /api/reviews
+2026-04-02 04:02:59 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:03:30 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:04:00 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:04:32 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:04:50 +03:00: 2026-04-02T01:04:50.503Z GET /api/products
+2026-04-02 04:05:03 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:05:33 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:05:39 +03:00: 2026-04-02T01:05:39.309Z GET /api/products
+2026-04-02 04:06:00 +03:00: 2026-04-02T01:06:00.133Z GET /api/products
+2026-04-02 04:06:04 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:06:35 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:07:07 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:07:25 +03:00: 2026-04-02T01:07:25.612Z GET /api/products
+2026-04-02 04:07:26 +03:00: 2026-04-02T01:07:26.731Z GET /api/products
+2026-04-02 04:07:34 +03:00: 2026-04-02T01:07:34.806Z GET /api/products
+2026-04-02 04:07:38 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:07:47 +03:00: 2026-04-02T01:07:47.393Z GET /api/products
+2026-04-02 04:08:08 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:08:32 +03:00: ✅ Database initialized
+2026-04-02 04:08:32 +03:00: 
+2026-04-02 04:08:32 +03:00: 🚀 Backend running on port 3001
+2026-04-02 04:08:32 +03:00: 📁 Uploads: http://localhost:3001/uploads/products
+2026-04-02 04:08:32 +03:00: 📡 CORS: http://localhost:4321
+2026-04-02 04:08:32 +03:00: 🤖 Telegram: ✅
+2026-04-02 04:08:32 +03:00: ✉️ Email (outgoing): ✅
+2026-04-02 04:08:32 +03:00: 📬 Email (incoming): ✅
+2026-04-02 04:08:32 +03:00: 📨 Forward to: smailikin70@yandex.ru
+2026-04-02 04:08:32 +03:00: 📍 API: http://localhost:3001/api
+2026-04-02 04:08:32 +03:00: 
+2026-04-02 04:08:32 +03:00: 🤖 Telegram bot initialized
+2026-04-02 04:08:35 +03:00: 📬 Starting email listener for: info@prozhaluzi.ru
+2026-04-02 04:08:36 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:08:43 +03:00: 2026-04-02T01:08:43.870Z GET /api/products
+2026-04-02 04:09:06 +03:00: 2026-04-02T01:09:06.676Z GET /api/products
+2026-04-02 04:09:07 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:09:27 +03:00: 2026-04-02T01:09:27.327Z GET /api/products
+2026-04-02 04:09:37 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:09:54 +03:00: 2026-04-02T01:09:54.402Z GET /api/products
+2026-04-02 04:10:08 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:10:12 +03:00: 2026-04-02T01:10:12.013Z GET /api/products
+2026-04-02 04:10:39 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:10:44 +03:00: 2026-04-02T01:10:44.821Z GET /api/reviews/works
+2026-04-02 04:10:44 +03:00: 2026-04-02T01:10:44.824Z GET /api/reviews
+2026-04-02 04:11:09 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:11:21 +03:00: 2026-04-02T01:11:21.715Z POST /api/orders
+2026-04-02 04:11:21 +03:00: 
+2026-04-02 04:11:21 +03:00: 📥 ===== POST /api/orders =====
+2026-04-02 04:11:21 +03:00:    Body: {
+2026-04-02 04:11:21 +03:00:   "name": "Иван",
+2026-04-02 04:11:21 +03:00:   "phone": "+79999999999",
+2026-04-02 04:11:21 +03:00:   "blindsType": "Рулонные",
+2026-04-02 04:11:21 +03:00:   "message": "амемем"
+2026-04-02 04:11:21 +03:00: }
+2026-04-02 04:11:21 +03:00:    ✅ Order saved to DB: 1775092281716
+2026-04-02 04:11:21 +03:00:    📬 Sending Telegram...
+2026-04-02 04:11:21 +03:00: [TG Notify] Starting...
+2026-04-02 04:11:21 +03:00: [TG Notify] ✅ Bot instance OK
+2026-04-02 04:11:21 +03:00: [TG Notify] Authorized chats: [ 1034074077 ]
+2026-04-02 04:11:21 +03:00: [TG Notify] Sending to chat 1034074077...
+2026-04-02 04:11:22 +03:00: [TG Notify] ✅ Sent to 1034074077
+2026-04-02 04:11:22 +03:00: [TG Notify] Result: { success: true, sent: 1, failed: 0 }
+2026-04-02 04:11:22 +03:00:    📬 Telegram: { success: true, sent: 1, failed: 0 }
+2026-04-02 04:11:22 +03:00:    ✉️ Sending Email...
+2026-04-02 04:11:22 +03:00:    ✉️ Email: { success: false, error: 'connect ECONNREFUSED 77.88.21.158:465' }
+2026-04-02 04:11:22 +03:00: 📥 ===== End =====
+2026-04-02 04:11:22 +03:00: 
+2026-04-02 04:11:40 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:11:44 +03:00: 2026-04-02T01:11:44.873Z GET /api/products
+2026-04-02 04:12:11 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:12:27 +03:00: 2026-04-02T01:12:27.129Z GET /api/products
+2026-04-02 04:12:40 +03:00: 2026-04-02T01:12:40.721Z GET /api/products
+2026-04-02 04:12:42 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:12:48 +03:00: 2026-04-02T01:12:48.165Z GET /api/products
+2026-04-02 04:13:13 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:13:16 +03:00: 2026-04-02T01:13:16.526Z GET /api/products
+2026-04-02 04:13:22 +03:00: 2026-04-02T01:13:22.066Z GET /api/products
+2026-04-02 04:13:46 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:14:01 +03:00: 2026-04-02T01:14:01.235Z GET /api/products
+2026-04-02 04:14:01 +03:00: 2026-04-02T01:14:01.711Z GET /api/products
+2026-04-02 04:14:17 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:14:47 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:15:11 +03:00: 2026-04-02T01:15:11.555Z GET /api/products
+2026-04-02 04:15:18 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:15:21 +03:00: 2026-04-02T01:15:21.051Z GET /api/products
+2026-04-02 04:15:43 +03:00: 2026-04-02T01:15:43.373Z GET /api/products
+2026-04-02 04:15:44 +03:00: 2026-04-02T01:15:44.212Z GET /api/products
+2026-04-02 04:15:45 +03:00: 2026-04-02T01:15:45.367Z GET /api/products
+2026-04-02 04:15:46 +03:00: 2026-04-02T01:15:46.961Z GET /api/products
+2026-04-02 04:15:47 +03:00: 2026-04-02T01:15:47.965Z GET /api/products
+2026-04-02 04:15:48 +03:00: 2026-04-02T01:15:48.526Z GET /api/products
+2026-04-02 04:15:49 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:15:49 +03:00: 2026-04-02T01:15:49.732Z GET /api/products
+2026-04-02 04:15:53 +03:00: 2026-04-02T01:15:53.004Z GET /api/products
+2026-04-02 04:16:19 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:16:50 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:17:19 +03:00: 2026-04-02T01:17:19.480Z GET /api/products
+2026-04-02 04:17:21 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:17:29 +03:00: 2026-04-02T01:17:29.514Z GET /api/products
+2026-04-02 04:17:35 +03:00: 2026-04-02T01:17:35.821Z GET /api/products
+2026-04-02 04:17:39 +03:00: 2026-04-02T01:17:39.539Z GET /api/products
+2026-04-02 04:17:40 +03:00: 2026-04-02T01:17:40.380Z GET /api/products
+2026-04-02 04:17:40 +03:00: 2026-04-02T01:17:40.998Z GET /api/products
+2026-04-02 04:17:41 +03:00: 2026-04-02T01:17:41.579Z GET /api/products
+2026-04-02 04:17:51 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:18:22 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:18:52 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:19:23 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:19:35 +03:00: 2026-04-02T01:19:35.546Z GET /api/products
+2026-04-02 04:19:54 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:20:00 +03:00: 2026-04-02T01:20:00.330Z GET /api/products
+2026-04-02 04:20:10 +03:00: 2026-04-02T01:20:10.503Z GET /api/products
+2026-04-02 04:20:14 +03:00: 2026-04-02T01:20:14.613Z GET /api/products
+2026-04-02 04:20:25 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:20:32 +03:00: 2026-04-02T01:20:32.545Z GET /api/products
+2026-04-02 04:20:41 +03:00: 2026-04-02T01:20:41.533Z GET /api/products
+2026-04-02 04:20:44 +03:00: 2026-04-02T01:20:44.260Z GET /api/products
+2026-04-02 04:20:56 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:21:27 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:21:58 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:22:29 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:22:53 +03:00: ✅ Database initialized
+2026-04-02 04:22:53 +03:00: 
+2026-04-02 04:22:53 +03:00: 🚀 Backend running on port 3001
+2026-04-02 04:22:53 +03:00: 📁 Uploads: http://localhost:3001/uploads/products
+2026-04-02 04:22:53 +03:00: 📡 CORS: http://localhost:4321
+2026-04-02 04:22:53 +03:00: 🤖 Telegram: ✅
+2026-04-02 04:22:53 +03:00: ✉️ Email (outgoing): ✅
+2026-04-02 04:22:53 +03:00: 📬 Email (incoming): ✅
+2026-04-02 04:22:53 +03:00: 📨 Forward to: smailikin70@yandex.ru
+2026-04-02 04:22:53 +03:00: 📍 API: http://localhost:3001/api
+2026-04-02 04:22:53 +03:00: 
+2026-04-02 04:22:53 +03:00: 🤖 Telegram bot initialized
+2026-04-02 04:22:56 +03:00: 📬 Starting email listener for: info@prozhaluzi.ru
+2026-04-02 04:22:57 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:23:01 +03:00: ✅ Database initialized
+2026-04-02 04:23:02 +03:00: 
+2026-04-02 04:23:02 +03:00: 🚀 Backend running on port 3001
+2026-04-02 04:23:02 +03:00: 📁 Uploads: http://localhost:3001/uploads/products
+2026-04-02 04:23:02 +03:00: 📡 CORS: http://localhost:4321
+2026-04-02 04:23:02 +03:00: 🤖 Telegram: ✅
+2026-04-02 04:23:02 +03:00: ✉️ Email (outgoing): ✅
+2026-04-02 04:23:02 +03:00: 📬 Email (incoming): ✅
+2026-04-02 04:23:02 +03:00: 📨 Forward to: smailikin70@yandex.ru
+2026-04-02 04:23:02 +03:00: 📍 API: http://localhost:3001/api
+2026-04-02 04:23:02 +03:00: 
+2026-04-02 04:23:02 +03:00: 🤖 Telegram bot initialized
+2026-04-02 04:23:05 +03:00: 📬 Starting email listener for: info@prozhaluzi.ru
+2026-04-02 04:23:07 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:23:37 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:24:08 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:24:38 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:25:09 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:25:40 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:26:10 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:26:26 +03:00: 2026-04-02T01:26:26.038Z GET /api/products
+2026-04-02 04:26:32 +03:00: 2026-04-02T01:26:32.958Z GET /api/products
+2026-04-02 04:26:33 +03:00: 2026-04-02T01:26:33.490Z GET /api/products
+2026-04-02 04:26:34 +03:00: 2026-04-02T01:26:34.012Z GET /api/products
+2026-04-02 04:26:36 +03:00: 2026-04-02T01:26:36.276Z GET /api/products
+2026-04-02 04:26:41 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:27:03 +03:00: 2026-04-02T01:27:03.289Z GET /api/products
+2026-04-02 04:27:12 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:27:21 +03:00: 2026-04-02T01:27:21.866Z GET /api/products
+2026-04-02 04:27:43 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:27:46 +03:00: 2026-04-02T01:27:46.427Z GET /api/products
+2026-04-02 04:27:48 +03:00: 2026-04-02T01:27:48.546Z GET /api/products
+2026-04-02 04:27:50 +03:00: 2026-04-02T01:27:50.585Z GET /api/reviews/works
+2026-04-02 04:27:50 +03:00: 2026-04-02T01:27:50.587Z GET /api/reviews
+2026-04-02 04:28:02 +03:00: 2026-04-02T01:28:02.523Z POST /api/reviews
+2026-04-02 04:28:04 +03:00: 2026-04-02T01:28:04.127Z GET /api/reviews/works
+2026-04-02 04:28:04 +03:00: 2026-04-02T01:28:04.129Z GET /api/reviews
+2026-04-02 04:28:13 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:28:45 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:29:06 +03:00: 2026-04-02T01:29:06.841Z GET /api/reviews/works
+2026-04-02 04:29:06 +03:00: 2026-04-02T01:29:06.845Z GET /api/reviews
+2026-04-02 04:29:16 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:29:44 +03:00: 2026-04-02T01:29:44.814Z GET /api/products
+2026-04-02 04:29:47 +03:00: 2026-04-02T01:29:47.121Z GET /api/products
+2026-04-02 04:29:47 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:29:47 +03:00: 2026-04-02T01:29:47.688Z GET /api/products
+2026-04-02 04:29:48 +03:00: 2026-04-02T01:29:48.303Z GET /api/products
+2026-04-02 04:29:55 +03:00: 2026-04-02T01:29:55.621Z GET /api/products
+2026-04-02 04:29:56 +03:00: 2026-04-02T01:29:56.154Z GET /api/products
+2026-04-02 04:29:56 +03:00: 2026-04-02T01:29:56.671Z GET /api/products
+2026-04-02 04:30:02 +03:00: 2026-04-02T01:30:02.322Z GET /api/reviews/works
+2026-04-02 04:30:02 +03:00: 2026-04-02T01:30:02.324Z GET /api/reviews
+2026-04-02 04:30:14 +03:00: 2026-04-02T01:30:14.567Z GET /api/reviews/works
+2026-04-02 04:30:14 +03:00: 2026-04-02T01:30:14.570Z GET /api/reviews
+2026-04-02 04:30:16 +03:00: 2026-04-02T01:30:16.387Z GET /api/products
+2026-04-02 04:30:18 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:30:19 +03:00: 2026-04-02T01:30:19.621Z GET /api/products
+2026-04-02 04:30:43 +03:00: 2026-04-02T01:30:43.506Z GET /api/products
+2026-04-02 04:30:48 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:30:50 +03:00: 2026-04-02T01:30:50.133Z GET /api/products
+2026-04-02 04:31:11 +03:00: 2026-04-02T01:31:11.035Z GET /api/products
+2026-04-02 04:31:18 +03:00: 2026-04-02T01:31:18.242Z GET /api/products
+2026-04-02 04:31:19 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:31:26 +03:00: 2026-04-02T01:31:26.542Z GET /api/products
+2026-04-02 04:31:43 +03:00: 2026-04-02T01:31:43.337Z GET /api/products
+2026-04-02 04:31:50 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:32:20 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:32:51 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:33:22 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:33:53 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:34:23 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:34:54 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:35:25 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:35:56 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:35:57 +03:00: 2026-04-02T01:35:57.780Z GET /api/products
+2026-04-02 04:35:58 +03:00: 2026-04-02T01:35:58.335Z GET /api/products
+2026-04-02 04:36:26 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:36:57 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:37:28 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:37:59 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:38:29 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:39:00 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:39:31 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:40:01 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:40:21 +03:00: 2026-04-02T01:40:21.514Z GET /api/products
+2026-04-02 04:40:32 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:40:38 +03:00: 2026-04-02T01:40:38.381Z GET /api/products
+2026-04-02 04:41:03 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:41:33 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:42:04 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:42:35 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:42:37 +03:00: 2026-04-02T01:42:37.431Z GET /api/products
+2026-04-02 04:42:41 +03:00: 2026-04-02T01:42:41.285Z GET /api/products
+2026-04-02 04:43:06 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:43:36 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:44:07 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:44:29 +03:00: 2026-04-02T01:44:29.655Z GET /api/products
+2026-04-02 04:44:38 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:44:45 +03:00: 2026-04-02T01:44:45.524Z GET /api/reviews/works
+2026-04-02 04:44:45 +03:00: 2026-04-02T01:44:45.528Z GET /api/reviews
+2026-04-02 04:45:08 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:45:31 +03:00: 2026-04-02T01:45:31.547Z GET /api/reviews/works
+2026-04-02 04:45:31 +03:00: 2026-04-02T01:45:31.549Z GET /api/reviews
+2026-04-02 04:45:39 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:45:44 +03:00: 2026-04-02T01:45:44.545Z GET /api/reviews/works
+2026-04-02 04:45:44 +03:00: 2026-04-02T01:45:44.548Z GET /api/reviews
+2026-04-02 04:46:08 +03:00: 2026-04-02T01:46:08.221Z GET /api/reviews/works
+2026-04-02 04:46:08 +03:00: 2026-04-02T01:46:08.225Z GET /api/reviews
+2026-04-02 04:46:10 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:46:11 +03:00: 2026-04-02T01:46:11.527Z GET /api/reviews
+2026-04-02 04:46:11 +03:00: 2026-04-02T01:46:11.528Z GET /api/reviews/works
+2026-04-02 04:46:31 +03:00: 2026-04-02T01:46:31.925Z GET /api/products
+2026-04-02 04:46:41 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:46:43 +03:00: 2026-04-02T01:46:43.235Z GET /api/products
+2026-04-02 04:46:44 +03:00: 2026-04-02T01:46:44.799Z GET /api/products
+2026-04-02 04:46:59 +03:00: 2026-04-02T01:46:59.233Z GET /api/products
+2026-04-02 04:47:00 +03:00: 2026-04-02T01:47:00.912Z GET /api/products
+2026-04-02 04:47:11 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:47:20 +03:00: 2026-04-02T01:47:20.338Z POST /api/orders
+2026-04-02 04:47:20 +03:00: 📥 Order request from: ::1
+2026-04-02 04:47:20 +03:00: ✅ Saved order # 1775094440351
+2026-04-02 04:47:20 +03:00: [TG Notify] Starting...
+2026-04-02 04:47:20 +03:00: [TG Notify] ✅ Bot instance OK
+2026-04-02 04:47:20 +03:00: [TG Notify] Authorized chats: [ 1034074077 ]
+2026-04-02 04:47:20 +03:00: [TG Notify] Sending to chat 1034074077...
+2026-04-02 04:47:20 +03:00: [TG Notify] ✅ Sent to 1034074077
+2026-04-02 04:47:20 +03:00: [TG Notify] Result: { success: true, sent: 1, failed: 0 }
+2026-04-02 04:47:29 +03:00: 2026-04-02T01:47:29.257Z GET /api/reviews/works
+2026-04-02 04:47:29 +03:00: 2026-04-02T01:47:29.258Z GET /api/reviews
+2026-04-02 04:47:42 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:48:13 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:48:24 +03:00: 2026-04-02T01:48:24.757Z GET /api/reviews/works
+2026-04-02 04:48:24 +03:00: 2026-04-02T01:48:24.758Z GET /api/reviews
+2026-04-02 04:48:30 +03:00: 2026-04-02T01:48:30.179Z GET /api/products
+2026-04-02 04:48:44 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:49:00 +03:00: 2026-04-02T01:49:00.246Z GET /api/products
+2026-04-02 04:49:08 +03:00: 2026-04-02T01:49:08.757Z GET /api/products
+2026-04-02 04:49:14 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:49:45 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:50:05 +03:00: 2026-04-02T01:50:05.640Z GET /api/products
+2026-04-02 04:50:09 +03:00: 2026-04-02T01:50:09.409Z GET /api/products
+2026-04-02 04:50:12 +03:00: 2026-04-02T01:50:12.447Z GET /api/products
+2026-04-02 04:50:14 +03:00: 2026-04-02T01:50:14.353Z GET /api/products
+2026-04-02 04:50:16 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:50:26 +03:00: 2026-04-02T01:50:26.535Z GET /api/products
+2026-04-02 04:50:32 +03:00: 2026-04-02T01:50:32.067Z GET /api/products
+2026-04-02 04:50:33 +03:00: 2026-04-02T01:50:33.739Z GET /api/products
+2026-04-02 04:50:47 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:50:55 +03:00: ✅ Database initialized
+2026-04-02 04:50:55 +03:00: 
+2026-04-02 04:50:55 +03:00: 🚀 Backend running on port 3001
+2026-04-02 04:50:55 +03:00: 📁 Uploads: http://localhost:3001/uploads/products
+2026-04-02 04:50:55 +03:00: 📡 CORS: http://localhost:4321
+2026-04-02 04:50:55 +03:00: 🤖 Telegram: ✅
+2026-04-02 04:50:55 +03:00: ✉️ Email (outgoing): ✅
+2026-04-02 04:50:55 +03:00: 📬 Email (incoming): ✅
+2026-04-02 04:50:55 +03:00: 📨 Forward to: smailikin70@yandex.ru
+2026-04-02 04:50:55 +03:00: 📍 API: http://localhost:3001/api
+2026-04-02 04:50:55 +03:00: 
+2026-04-02 04:50:55 +03:00: 🤖 Telegram bot initialized
+2026-04-02 04:50:58 +03:00: 2026-04-02T01:50:58.383Z GET /api/products
+2026-04-02 04:50:58 +03:00: 📬 Starting email listener for: info@prozhaluzi.ru
+2026-04-02 04:50:59 +03:00: ⚠️  IMAP connection ended, reconnecting in 30s...
+2026-04-02 04:51:01 +03:00: 2026-04-02T01:51:01.399Z GET /api/reviews/works
+2026-04-02 04:51:01 +03:00: 2026-04-02T01:51:01.402Z GET /api/reviews

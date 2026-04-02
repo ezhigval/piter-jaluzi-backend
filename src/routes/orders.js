@@ -1,52 +1,60 @@
 const express = require('express');
-const router = express.Router();  // ← создаём роутер
+const router = express.Router();
 const db = require('../database/db');
 const { sendOrderNotification } = require('../services/telegram');
-const { sendOrderEmail } = require('../services/email');
 
-// ← ВОТ ОН, POST!
+// Простая санитизация
+function sanitize(input) {
+  if (typeof input !== 'string') return input;
+  return input
+    .replace(/[<>]/g, '') // Удаляем теги
+    .trim()
+    .substring(0, 1000); // Ограничиваем длину
+}
+
 router.post('/', async (req, res) => {
-  console.log('\n📥 ===== POST /api/orders =====');
-  console.log('   Body:', JSON.stringify(req.body, null, 2));
-
+  console.log('📥 Order request from:', req.ip);
+  
   try {
-    const { name, phone, blindsType, message } = req.body;
-
-    if (!name || !phone || !blindsType) {
-      return res.status(400).json({
-        success: false,
-        error: 'Required: name, phone, blindsType'
+    // Санитизация входных данных
+    const { name, phone, blindsType, message } = req.body || {};
+    
+    const sanitizedName = sanitize(name);
+    const sanitizedPhone = sanitize(phone);
+    const sanitizedBlindsType = sanitize(blindsType);
+    const sanitizedMessage = sanitize(message);
+    
+    // Валидация
+    if (!sanitizedName || !sanitizedPhone || !sanitizedBlindsType) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Required: name, phone, blindsType' 
       });
     }
 
-    const order = db.createOrder({ name, phone, blindsType, message });
-    console.log('   ✅ Order saved to DB:', order.id);
+    // Валидация телефона (простая)
+    const phoneRegex = /^[\d\+\-\(\)\s]{10,20}$/;
+    if (!phoneRegex.test(sanitizedPhone)) {
+      return res.status(400).json({ success: false, error: 'Invalid phone format' });
+    }
 
-    // Уведомления
-    console.log('   📬 Sending Telegram...');
-    try {
-      const tg = await sendOrderNotification(order);
-      console.log('   📬 Telegram:', tg);
-    } catch(e) { console.error('   ❌ TG error:', e.message); }
-
-    console.log('   ✉️ Sending Email...');
-    try {
-      const email = await sendOrderEmail(order);
-      console.log('   ✉️ Email:', email);
-    } catch(e) { console.error('   ❌ Email error:', e.message); }
-
-    console.log('📥 ===== End =====\n');
-
-    res.status(201).json({
-      success: true,
-      orderId: order.id,
-      message: 'Заявка принята'
+    const order = db.createOrder({ 
+      name: sanitizedName, 
+      phone: sanitizedPhone, 
+      blindsType: sanitizedBlindsType, 
+      message: sanitizedMessage 
     });
+    console.log('✅ Saved order #', order.id);
 
-  } catch (error) {
-    console.error('❌ Order error:', error.message);
+    // Уведомления в фоне
+    sendOrderNotification(order).catch(e => console.error('TG error:', e.message));
+
+    res.status(201).json({ success: true, orderId: order.id });
+    
+  } catch (err) {
+    console.error('❌ Order route error:', err);
     res.status(500).json({ success: false, error: 'Internal error' });
   }
 });
 
-module.exports = router;  // ← экспортируем
+module.exports = router;

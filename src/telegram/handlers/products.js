@@ -1,11 +1,14 @@
 const db = require('../../database/db');
-const { mainKeyboard, cancelKeyboard, categoryKeyboard, editKeyboard } = require('../keyboards/main');
+const { mainKeyboard, cancelKeyboard, categoryKeyboard, editProductKeyboard, productsMenuKeyboard } = require('../keyboards/main');
 const { getUserState, setUserState, clearUserState } = require('../middleware/state');
 
 // Показать товары
 async function showProducts(bot, chatId) {
   const products = db.getAllProducts();
-  if (!products.length) return bot.sendMessage(chatId, '📦 Товаров пока нет\n\nНажмите ➕ Добавить', mainKeyboard);
+  
+  if (!products.length) {
+    return bot.sendMessage(chatId, '📦 Товаров пока нет\n\nНажмите ➕ Добавить товар', productsMenuKeyboard);
+  }
   
   let text = `📦 *Товары (${products.length})*\n\n`;
   products.slice(0, 10).forEach(p => {
@@ -13,18 +16,20 @@ async function showProducts(bot, chatId) {
     text += `${p.category} • ${p.price}₽/м² • ${p.in_stock ? '✅' : '❌'}\n\n`;
   });
   
-  if (products.length > 10) text += `... и ещё ${products.length - 10} товаров`;
+  if (products.length > 10) {
+    text += `... и ещё ${products.length - 10} товаров\n`;
+  }
   
-  bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...mainKeyboard });
+  bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...productsMenuKeyboard });
 }
 
-// Статистика
+// Статистика товаров
 async function showStats(bot, chatId) {
   const products = db.getAllProducts();
   const inStock = products.filter(p => p.in_stock).length;
   const categories = [...new Set(products.map(p => p.category))];
   
-  const text = `📊 *Статистика*\n\n` +
+  const text = `📊 *Статистика товаров*\n\n` +
     `Всего: *${products.length}*\n` +
     `В наличии: *${inStock}*\n` +
     `Нет: *${products.length - inStock}*\n` +
@@ -32,6 +37,11 @@ async function showStats(bot, chatId) {
     `Категории:\n${categories.map(c => '• ' + c).join('\n')}`;
   
   bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...mainKeyboard });
+}
+
+// Меню товаров
+async function productsMenu(bot, chatId) {
+  bot.sendMessage(chatId, '📦 *Управление товарами*', { parse_mode: 'Markdown', ...productsMenuKeyboard });
 }
 
 // Начать добавление
@@ -129,7 +139,7 @@ async function handleEditSelect(bot, msg, state) {
   setUserState(chatId, { action: 'edit', product, editField: null });
   
   const text = `✏️ *#${id}*\n${product.name}\n${product.price}₽\n\nВыберите что изменить:`;
-  bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...editKeyboard });
+  bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...editProductKeyboard });
 }
 
 // Редактирование
@@ -163,7 +173,13 @@ async function handleEdit(bot, msg, state) {
   if (text === '✏️ В наличии') {
     state.product.in_stock = !state.product.in_stock;
     db.updateProduct(state.product.id, { in_stock: state.product.in_stock });
-    bot.sendMessage(chatId, `В наличии: ${state.product.in_stock ? '✅' : '❌'}`, editKeyboard);
+    bot.sendMessage(chatId, `В наличии: ${state.product.in_stock ? '✅' : '❌'}`, editProductKeyboard);
+    return;
+  }
+  
+  if (text === '📷 Загрузить фото') {
+    state.editField = 'photo_upload';
+    bot.sendMessage(chatId, '📷 Отправьте фото файлом:', cancelKeyboard);
     return;
   }
   
@@ -174,13 +190,16 @@ async function handleEdit(bot, msg, state) {
       const p = parseInt(text);
       if (isNaN(p)) { bot.sendMessage(chatId, '❌ Число!'); return; }
       update.price = p;
+    } else if (state.editField === 'photo_upload') {
+      bot.sendMessage(chatId, '❌ Используйте отправку файла, не текст');
+      return;
     } else {
       update[state.editField] = text;
     }
     
     db.updateProduct(state.product.id, update);
     state.product = { ...state.product, ...update };
-    bot.sendMessage(chatId, `✅ Обновлено`, editKeyboard);
+    bot.sendMessage(chatId, `✅ Обновлено`, editProductKeyboard);
     state.editField = null;
   }
 }
@@ -198,4 +217,12 @@ async function handleDelete(bot, msg, state) {
   bot.sendMessage(chatId, `✅ Удалён #${id}`, mainKeyboard);
 }
 
-module.exports = { showProducts, showStats, startAdd, startEdit, startDelete, handleState };
+module.exports = { 
+  showProducts, 
+  showStats, 
+  productsMenu,
+  startAdd, 
+  startEdit, 
+  startDelete, 
+  handleState 
+};

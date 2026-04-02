@@ -1,10 +1,13 @@
 const TelegramBot = require('node-telegram-bot-api');
 const { isAuthorized, saveChat } = require('./middleware/auth');
-const { getUserState, setUserState, clearUserState } = require('./middleware/state');
+const { getUserState, clearUserState } = require('./middleware/state');
 const { mainKeyboard } = require('./keyboards/main');
-const { showProducts, showStats, startAdd, startEdit, startDelete, handleState } = require('./handlers/products');
-const { handlePhotoUpload } = require('./handlers/photos');
+
+const { showProducts, showStats, productsMenu, startAdd, startEdit, startDelete, handleState: handleProductState } = require('./handlers/products');
+const { showAllReviews, reviewsMenu, startAddReview, startDeleteReview, handleState: handleReviewState } = require('./handlers/reviews');
+const { showAllWorks, worksMenu, startAddWork, startDeleteWork, handleState: handleWorkState, handlePhotoUpload } = require('./handlers/works');
 const { showHelp } = require('./handlers/menu');
+const { handlePhotoUpload: handleProductPhoto } = require('./handlers/photos');
 
 let bot = null;
 
@@ -46,8 +49,17 @@ function setupHandlers(bot) {
     if (!isAuthorized(chatId)) return;
     
     const state = getUserState(chatId);
-    if (state && (state.action === 'add' || state.action === 'edit')) {
+    
+    // Фото для товара
+    if (state && state.action === 'edit' && state.editField === 'photo_upload') {
+      await handleProductPhoto(bot, msg, state);
+      return;
+    }
+    
+    // Фото для работы
+    if (state && state.action === 'add_work' && state.step === 1) {
       await handlePhotoUpload(bot, msg, state);
+      return;
     }
   });
 
@@ -56,8 +68,7 @@ function setupHandlers(bot) {
     const chatId = msg.chat.id;
     const text = msg.text;
     
-    // Игнорируем фото (уже обработано)
-    if (msg.photo) return;
+    if (msg.photo) return; // Фото обрабатывается отдельно
     
     // Авторизация
     if (!isAuthorized(chatId)) {
@@ -75,33 +86,52 @@ function setupHandlers(bot) {
     // Обработка состояний
     const state = getUserState(chatId);
     if (state) {
-      await handleState(bot, msg, state);
+      if (state.action === 'add' || state.action === 'edit_select' || state.action === 'edit' || state.action === 'delete') {
+        await handleProductState(bot, msg, state);
+      } else if (state.action === 'add_review' || state.action === 'delete_review') {
+        await handleReviewState(bot, msg, state);
+      } else if (state.action === 'add_work' || state.action === 'delete_work') {
+        await handleWorkState(bot, msg, state);
+      }
       return;
     }
     
     // Главное меню
-    if (text === '📦 Товары') await showProducts(bot, chatId);
-    else if (text === '📊 Статистика') await showStats(bot, chatId);
-    else if (text === '➕ Добавить') await startAdd(bot, chatId);
-    else if (text === '✏️ Редактировать') await startEdit(bot, chatId);
-    else if (text === '❌ Удалить') await startDelete(bot, chatId);
+    if (text === '📊 Статистика') await showStats(bot, chatId);
+    else if (text === '📦 Товары') await productsMenu(bot, chatId);
+    else if (text === '📝 Отзывы') await reviewsMenu(bot, chatId);
+    else if (text === '🖼️ Наши работы') await worksMenu(bot, chatId);
     else if (text === '📚 Помощь') await showHelp(bot, chatId);
-    else if (text === '❌ Отмена' || text === '⬅️ Назад') {
+    else if (text === '⬅️ В меню' || text === '❌ Отмена') {
       clearUserState(chatId);
       bot.sendMessage(chatId, 'Главное меню:', mainKeyboard);
     }
+    
+    // Подменю товаров
+    else if (text === '📦 Все товары') await showProducts(bot, chatId);
+    else if (text === '➕ Добавить товар') await startAdd(bot, chatId);
+    else if (text === '✏️ Редактировать') await startEdit(bot, chatId);
+    else if (text === '❌ Удалить') await startDelete(bot, chatId);
+    
+    // Подменю отзывов
+    else if (text === '📝 Все отзывы') await showAllReviews(bot, chatId);
+    else if (text === '➕ Добавить отзыв') await startAddReview(bot, chatId);
+    else if (text === '❌ Удалить отзыв') await startDeleteReview(bot, chatId);
+    
+    // Подменю работ
+    else if (text === '🖼️ Все работы') await showAllWorks(bot, chatId);
+    else if (text === '➕ Добавить работу') await startAddWork(bot, chatId);
+    else if (text === '❌ Удалить работу') await startDeleteWork(bot, chatId);
   });
 
   // Команды
-  bot.onText(/\/products/, (msg) => showProducts(bot, msg.chat.id));
   bot.onText(/\/stats/, (msg) => showStats(bot, msg.chat.id));
-  bot.onText(/\/add/, (msg) => startAdd(bot, msg.chat.id));
-  bot.onText(/\/edit/, (msg) => startEdit(bot, msg.chat.id));
-  bot.onText(/\/delete/, (msg) => startDelete(bot, msg.chat.id));
+  bot.onText(/\/products/, (msg) => productsMenu(bot, msg.chat.id));
+  bot.onText(/\/reviews/, (msg) => reviewsMenu(bot, msg.chat.id));
+  bot.onText(/\/works/, (msg) => worksMenu(bot, msg.chat.id));
   bot.onText(/\/help/, (msg) => showHelp(bot, msg.chat.id));
 }
 
-// Экспорт для использования в других модулях
 function getBot() {
   return bot;
 }

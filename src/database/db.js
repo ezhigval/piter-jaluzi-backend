@@ -6,12 +6,14 @@ const DB_PATH = path.join(__dirname, '../../data/db.json');
 function readDb() {
   try {
     if (!fs.existsSync(DB_PATH)) {
-      writeDb({ products: [], orders: [] });
+      const initial = { products: [], orders: [], reviews: [], works: [] };
+      writeDb(initial);
+      return initial;
     }
     return JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
   } catch (e) {
     console.error('DB read error:', e.message);
-    return { products: [], orders: [] };
+    return { products: [], orders: [], reviews: [], works: [] };
   }
 }
 
@@ -21,10 +23,9 @@ function writeDb(data) {
   fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
 }
 
+// === PRODUCTS ===
 module.exports.getAllProducts = () => readDb().products;
-
 module.exports.getProductById = (id) => readDb().products.find(p => p.id === id);
-
 module.exports.createProduct = (data) => {
   const db = readDb();
   const maxId = db.products.reduce((m, p) => Math.max(m, p.id || 0), 0);
@@ -42,7 +43,6 @@ module.exports.createProduct = (data) => {
   writeDb(db);
   return product;
 };
-
 module.exports.updateProduct = (id, data) => {
   const db = readDb();
   const idx = db.products.findIndex(p => p.id === id);
@@ -51,7 +51,6 @@ module.exports.updateProduct = (id, data) => {
   writeDb(db);
   return db.products[idx];
 };
-
 module.exports.deleteProduct = (id) => {
   const db = readDb();
   const before = db.products.length;
@@ -60,6 +59,7 @@ module.exports.deleteProduct = (id) => {
   return db.products.length < before;
 };
 
+// === ORDERS ===
 module.exports.createOrder = (data) => {
   const db = readDb();
   const order = {
@@ -74,7 +74,10 @@ module.exports.createOrder = (data) => {
   writeDb(db);
   return order;
 };
-
 module.exports.getAllOrders = () => readDb().orders;
+
+// === REVIEWS & WORKS ===
+module.exports.readDb = readDb;
+module.exports.writeDb = writeDb;
 
 console.log('✅ Database initialized');

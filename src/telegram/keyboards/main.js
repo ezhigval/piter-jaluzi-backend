@@ -1,14 +1,16 @@
+// Главное меню
 const mainKeyboard = {
   reply_markup: {
     keyboard: [
-      ['📦 Товары', '📊 Статистика'],
-      ['➕ Добавить', '✏️ Редактировать'],
-      ['❌ Удалить', '📚 Помощь']
+      ['📊 Статистика', '📦 Товары'],
+      ['📝 Отзывы', '🖼️ Наши работы'],
+      ['📚 Помощь']
     ],
     resize_keyboard: true
   }
 };
 
+// Отмена/Назад
 const cancelKeyboard = {
   reply_markup: {
     keyboard: [['❌ Отмена', '⬅️ Назад']],
@@ -16,6 +18,7 @@ const cancelKeyboard = {
   }
 };
 
+// Категории товаров
 const categoryKeyboard = {
   reply_markup: {
     keyboard: [
@@ -27,7 +30,8 @@ const categoryKeyboard = {
   }
 };
 
-const editKeyboard = {
+// Редактирование товара
+const editProductKeyboard = {
   reply_markup: {
     keyboard: [
       ['✏️ Название', '✏️ Категория'],
@@ -39,4 +43,46 @@ const editKeyboard = {
   }
 };
 
-module.exports = { mainKeyboard, cancelKeyboard, categoryKeyboard, editKeyboard };
+// Управление отзывами
+const reviewsMenuKeyboard = {
+  reply_markup: {
+    keyboard: [
+      ['📝 Все отзывы', '➕ Добавить отзыв'],
+      ['❌ Удалить отзыв', '⬅️ В меню']
+    ],
+    resize_keyboard: true
+  }
+};
+
+// Управление работами
+const worksMenuKeyboard = {
+  reply_markup: {
+    keyboard: [
+      ['🖼️ Все работы', '➕ Добавить работу'],
+      ['❌ Удалить работу', '⬅️ В меню']
+    ],
+    resize_keyboard: true
+  }
+};
+
+// Управление товарами
+const productsMenuKeyboard = {
+  reply_markup: {
+    keyboard: [
+      ['📦 Все товары', '➕ Добавить товар'],
+      ['✏️ Редактировать', '❌ Удалить'],
+      ['⬅️ В меню']
+    ],
+    resize_keyboard: true
+  }
+};
+
+module.exports = { 
+  mainKeyboard, 
+  cancelKeyboard, 
+  categoryKeyboard, 
+  editProductKeyboard,
+  reviewsMenuKeyboard,
+  worksMenuKeyboard,
+  productsMenuKeyboard 
+};
