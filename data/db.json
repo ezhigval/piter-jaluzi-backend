@@ -1,0 +1,142 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Рулонные жалюзи Mini",
+      "category": "Рулонные",
+      "price": 890,
+      "description": "Компактные рулонные жалюзи для небольших окон.",
+      "image": "http://localhost:3001/uploads/products/1775087457510-cpx4ig.jpg",
+      "in_stock": true,
+      "created_at": "2024-01-01T00:00:00.000Z",
+      "updated_at": "2026-04-01T23:50:57.512Z"
+    },
+    {
+      "id": 2,
+      "name": "Вертикальные жалюзи Classic",
+      "category": "Вертикальные",
+      "price": 1200,
+      "description": "Классические вертикальные жалюзи для офисов и дома.",
+      "image": "http://localhost:3001/uploads/products/1775087164997-db34nk.jpg",
+      "in_stock": true,
+      "created_at": "2024-01-01T00:00:00.000Z",
+      "updated_at": "2026-04-01T23:46:04.998Z"
+    },
+    {
+      "id": 3,
+      "name": "Горизонтальные алюминиевые",
+      "category": "Горизонтальные",
+      "price": 1500,
+      "description": "Прочные алюминиевые жалюзи с широким выбором цветов.",
+      "image": "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=600&q=80",
+      "in_stock": true,
+      "created_at": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": 1775085634775,
+      "name": "пепепе",
+      "phone": "пепепеп",
+      "blinds_type": "roller",
+      "message": "пепепе",
+      "created_at": "2026-04-01T23:20:34.775Z"
+    },
+    {
+      "id": 1775085838017,
+      "name": "пмикеи",
+      "phone": "е4и4еи",
+      "blinds_type": "horizontal",
+      "message": "t5fvt5vv",
+      "created_at": "2026-04-01T23:23:58.017Z"
+    },
+    {
+      "id": 1775087515329,
+      "name": "Васька",
+      "phone": "+2348к7238",
+      "blinds_type": "other",
+      "message": "Очень надо",
+      "created_at": "2026-04-01T23:51:55.329Z"
+    },
+    {
+      "id": 1775087595931,
+      "name": "Езеее",
+      "phone": "еее",
+      "blinds_type": "roller",
+      "message": "еее",
+      "created_at": "2026-04-01T23:53:15.931Z"
+    },
+    {
+      "id": 1775087663900,
+      "name": "ка4м",
+      "phone": "к4м4к",
+      "blinds_type": "other",
+      "message": "мк4м",
+      "created_at": "2026-04-01T23:54:23.900Z"
+    },
+    {
+      "id": 1775087689446,
+      "name": "ка4м",
+      "phone": "к4м4к",
+      "blinds_type": "other",
+      "message": "мк4м",
+      "created_at": "2026-04-01T23:54:49.446Z"
+    },
+    {
+      "id": 1775087891982,
+      "name": "Тест",
+      "phone": "+79990000000",
+      "blinds_type": "roller",
+      "message": "Проверка",
+      "created_at": "2026-04-01T23:58:11.982Z"
+    },
+    {
+      "id": 1775087917679,
+      "name": "Тест",
+      "phone": "+79990000000",
+      "blinds_type": "roller",
+      "message": "Проверка",
+      "created_at": "2026-04-01T23:58:37.679Z"
+    },
+    {
+      "id": 1775087993476,
+      "name": "Тест",
+      "phone": "+79990000000",
+      "blinds_type": "roller",
+      "message": "Проверка",
+      "created_at": "2026-04-01T23:59:53.476Z"
+    },
+    {
+      "id": 1775088051198,
+      "name": "ка4м",
+      "phone": "к4м4к",
+      "blinds_type": "other",
+      "message": "мк4м",
+      "created_at": "2026-04-02T00:00:51.198Z"
+    },
+    {
+      "id": 1775088182275,
+      "name": "зузуз",
+      "phone": "зузуз",
+      "blinds_type": "horizontal",
+      "message": "зизи",
+      "created_at": "2026-04-02T00:03:02.275Z"
+    },
+    {
+      "id": 1775088243168,
+      "name": "щащащ",
+      "phone": "щущущ",
+      "blinds_type": "roller",
+      "message": "щищи",
+      "created_at": "2026-04-02T00:04:03.168Z"
+    },
+    {
+      "id": 1775088371414,
+      "name": "UFFF",
+      "phone": "555",
+      "blinds_type": "vertical",
+      "message": "",
+      "created_at": "2026-04-02T00:06:11.414Z"
+    }
+  ]
+}

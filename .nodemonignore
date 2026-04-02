@@ -1,0 +1,4 @@
+data/*
+uploads/*
+src/uploads/*
+*.log
