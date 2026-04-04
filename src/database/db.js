@@ -182,4 +182,5 @@ module.exports.writeDb = (data) => {
   console.warn('writeDb() is deprecated with SQLite backend');
 };
 
+require('./seed').seed();
 console.log('✅ SQLite Database initialized');
