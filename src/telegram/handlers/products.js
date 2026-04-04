@@ -25,22 +25,36 @@ async function showProducts(bot, chatId) {
   bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...productsMenuKeyboard });
 }
 
-// Статистика товаров
+// Статистика сайта
 async function showStats(bot, chatId) {
   const products = db.getAllProducts();
-  const inStock = products.filter(p => p.in_stock).length;
-  const categories = [...new Set(products.map(p => p.category))];
+  const orders = db.getAllOrders();
+  const data = db.readDb();
+  const reviews = data.reviews || [];
   
-  const text = `📊 *Статистика товаров*\n\n` +
+  const inStock = products.filter(p => p.in_stock).length;
+  const outOfStock = products.length - inStock;
+  
+  const now = new Date();
+  const monthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+  
+  const ordersThisMonth = orders.filter(o => new Date(o.created_at) >= monthAgo).length;
+  const reviewsThisMonth = reviews.filter(r => new Date(r.created_at) >= monthAgo).length;
+  
+  const text = `📊 *Полная статистика*\n\n` +
+    `📦 *Товары*\n` +
     `Всего: *${products.length}*\n` +
     `В наличии: *${inStock}*\n` +
-    `Нет: *${products.length - inStock}*\n` +
-    `Категорий: *${categories.length}*\n\n` +
-    `Категории:\n${categories.map(c => '• ' + escapeTelegramMarkdown(c)).join('\n')}`;
+    `Нет в наличии: *${outOfStock}*\n` +
+    `🛒 *Заявки*\n` +
+    `Всего: *${orders.length}*\n` +
+    `За месяц: *${ordersThisMonth}*\n` +
+    `⭐ *Отзывы*\n` +
+    `Всего: *${reviews.length}*\n` +
+    `За месяц: *${reviewsThisMonth}*`;
   
   bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...mainKeyboard });
 }
-
 // Меню товаров
 async function productsMenu(bot, chatId) {
   bot.sendMessage(chatId, '📦 *Управление товарами*', { parse_mode: 'Markdown', ...productsMenuKeyboard });
