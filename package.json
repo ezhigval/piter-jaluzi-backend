@@ -10,9 +10,11 @@
     "normalize:data": "node src/scripts/normalize-db.js",
     "test:smoke": "node test-backend.js",
     "test:contract": "node test-front-contract.js",
-    "test:telegram": "node test-telegram-bot.js"
+    "test:telegram": "node test-telegram-bot.js",
+    "postinstall": "npm rebuild better-sqlite3 2>/dev/null || true"
   },
   "dependencies": {
+    "better-sqlite3": "^12.8.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",

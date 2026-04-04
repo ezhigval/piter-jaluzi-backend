@@ -10,14 +10,6 @@ const {
   sanitizeText
 } = require('../utils/sanitize');
 
-function sortByCreatedAtDesc(items) {
-  return [...items].sort((a, b) => {
-    const left = new Date(b.created_at || 0).getTime();
-    const right = new Date(a.created_at || 0).getTime();
-    return left - right;
-  });
-}
-
 function serializeReview(req, review) {
   return {
     ...review,
@@ -37,8 +29,7 @@ function serializeWork(req, work, fallbackPhoto = '') {
 // GET /api/reviews - все отзывы
 router.get('/', (req, res) => {
   try {
-    const data = db.readDb();
-    const reviews = sortByCreatedAtDesc(data.reviews || []).map((review) => serializeReview(req, review));
+    const reviews = db.getAllReviews().map((review) => serializeReview(req, review));
     res.json({ success: true, data: reviews });
   } catch(e) {
     res.status(500).json({ success: false, error: e.message });
@@ -49,32 +40,25 @@ router.get('/', (req, res) => {
 router.post('/', (req, res) => {
   try {
     const { name, blindsType, photos, comment, rating } = req.body;
-    const sanitizedName = sanitizeText(name, 120);
     const sanitizedBlindsType = normalizeBlindsType(blindsType);
     const sanitizedComment = sanitizeLongText(comment, 2000);
     const sanitizedPhotos = sanitizeStringArray(photos, 6, 1000);
     const sanitizedRating = parseRating(rating) || 5;
 
-    if (!sanitizedName || !sanitizedBlindsType || !sanitizedComment) {
+    // If name is required, uncomment:
+    // const sanitizedName = sanitizeText(name, 120);
+
+    if (!name || !sanitizedBlindsType || !sanitizedComment) {
       return res.status(400).json({ success: false, error: 'Required: name, blindsType, comment' });
     }
     
-    const data = db.readDb();
-    if (!data.reviews) data.reviews = [];
-    
-    const maxId = data.reviews.reduce((m, r) => Math.max(m, r.id || 0), 0);
-    const review = {
-      id: maxId + 1,
-      name: sanitizedName,
+    const review = db.createReview({
+      name: sanitizeText(name, 120),
       blindsType: sanitizedBlindsType,
       photos: sanitizedPhotos,
       comment: sanitizedComment,
-      rating: sanitizedRating,
-      created_at: new Date().toISOString()
-    };
-    
-    data.reviews.push(review);
-    db.writeDb(data);
+      rating: sanitizedRating
+    });
     
     res.status(201).json({ success: true, data: serializeReview(req, review) });
   } catch(e) {
@@ -85,12 +69,8 @@ router.post('/', (req, res) => {
 // DELETE /api/reviews/:id - удалить отзыв
 router.delete('/:id', (req, res) => {
   try {
-    const data = db.readDb();
-    const before = data.reviews.length;
-    data.reviews = data.reviews.filter(r => r.id !== parseInt(req.params.id));
-    db.writeDb(data);
-    
-    if (data.reviews.length < before) {
+    const ok = db.deleteReview(parseInt(req.params.id));
+    if (ok) {
       res.json({ success: true, message: 'Deleted' });
     } else {
       res.status(404).json({ success: false, error: 'Not found' });
@@ -105,9 +85,9 @@ router.delete('/:id', (req, res) => {
 // GET /api/reviews/works - все работы
 router.get('/works', (req, res) => {
   try {
-    const data = db.readDb();
-    const fallbackPhoto = data.products?.[0]?.image || '';
-    const works = sortByCreatedAtDesc(data.works || []).map((work) => serializeWork(req, work, fallbackPhoto));
+    const products = db.getAllProducts();
+    const fallbackPhoto = products[0]?.image || '';
+    const works = db.getAllWorks().map((work) => serializeWork(req, work, fallbackPhoto));
     res.json({ success: true, data: works });
   } catch(e) {
     res.status(500).json({ success: false, error: e.message });
@@ -125,19 +105,10 @@ router.post('/works', (req, res) => {
       return res.status(400).json({ success: false, error: 'Required: photo' });
     }
     
-    const data = db.readDb();
-    if (!data.works) data.works = [];
-    
-    const maxId = data.works.reduce((m, w) => Math.max(m, w.id || 0), 0);
-    const work = {
-      id: maxId + 1,
+    const work = db.createWork({
       photo: sanitizedPhoto,
-      title: sanitizedTitle,
-      created_at: new Date().toISOString()
-    };
-    
-    data.works.push(work);
-    db.writeDb(data);
+      title: sanitizedTitle
+    });
     
     res.status(201).json({ success: true, data: serializeWork(req, work) });
   } catch(e) {
@@ -148,12 +119,8 @@ router.post('/works', (req, res) => {
 // DELETE /api/reviews/works/:id - удалить работу
 router.delete('/works/:id', (req, res) => {
   try {
-    const data = db.readDb();
-    const before = data.works.length;
-    data.works = data.works.filter(w => w.id !== parseInt(req.params.id));
-    db.writeDb(data);
-    
-    if (data.works.length < before) {
+    const ok = db.deleteWork(parseInt(req.params.id));
+    if (ok) {
       res.json({ success: true, message: 'Deleted' });
     } else {
       res.status(404).json({ success: false, error: 'Not found' });
