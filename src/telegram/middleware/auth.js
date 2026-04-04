@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const config = require('../../config');
 
-const AUTH_FILE = path.join(__dirname, '../../data/authorizedChats.json');
+const AUTH_FILE = config.authorizedChatsFile;
 
 function loadChats() {
   try {

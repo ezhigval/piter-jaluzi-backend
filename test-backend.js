@@ -1,6 +1,9 @@
 const http = require('http');
+const path = require('path');
 
-const API_URL = 'http://localhost:3001';
+const API_URL = process.env.API_URL || 'http://localhost:3001';
+const allowWriteTests = process.env.ALLOW_WRITE_TESTS === '1';
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'data', 'db.json');
 
 function request(method, path, body = null) {
   return new Promise((resolve, reject) => {
@@ -69,41 +72,44 @@ async function testBackend() {
 
   // 3. Тестовая заявка
   console.log('\n3️⃣  Тест заявки...');
-  try {
-    const order = await request('POST', '/api/orders', {
-      name: 'Тест',
-      phone: '+79990000000',
-      blindsType: 'roller',
-      message: 'Тест из скрипта'
-    });
-    
-    if (order.data?.success) {
-      console.log('   ✅ Заявка создана:', order.data.orderId);
-      console.log('   📬 Telegram:', order.data.notifications?.telegram?.success ? '✅' : '❌');
-      console.log('   ✉️  Email:', order.data.notifications?.email?.success ? '✅' : '❌');
-    } else {
-      console.log('   ❌ Ошибка:', order.data?.error || order.status);
+  if (!allowWriteTests) {
+    console.log('   ⏭️  Пропущено: set ALLOW_WRITE_TESTS=1 для POST /api/orders');
+  } else {
+    try {
+      const order = await request('POST', '/api/orders', {
+        name: 'Тест',
+        phone: '+79990000000',
+        blindsType: 'roller',
+        message: 'Тест из скрипта'
+      });
+      
+      if (order.data?.success) {
+        console.log('   ✅ Заявка создана:', order.data.orderId);
+        console.log('   📬 Telegram:', order.data.notifications?.telegram?.success ? '✅' : '❌');
+        console.log('   ✉️  Email:', order.data.notifications?.email?.success ? '✅' : '❌');
+      } else {
+        console.log('   ❌ Ошибка:', order.data?.error || order.status);
+      }
+    } catch (e) {
+      console.log('   ❌ Ошибка:', e.message);
+      console.log('\n   💡 Проверьте:');
+      console.log('   - TELEGRAM_BOT_TOKEN в .env');
+      console.log('   - EMAIL_* настройки в .env');
+      console.log('   - Вы авторизованы в боте? Напишите /status');
     }
-  } catch (e) {
-    console.log('   ❌ Ошибка:', e.message);
-    console.log('\n   💡 Проверьте:');
-    console.log('   - TELEGRAM_BOT_TOKEN в .env');
-    console.log('   - EMAIL_* настройки в .env');
-    console.log('   - Вы авторизованы в боте? Напишите /status');
   }
 
   // 4. Проверка базы
   console.log('\n4️⃣  Проверка базы...');
   try {
     const fs = require('fs');
-    const dbPath = './data/db.json';
-    if (fs.existsSync(dbPath)) {
-      const db = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
-      console.log('   ✅ База найдена:', dbPath);
+    if (fs.existsSync(DB_PATH)) {
+      const db = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+      console.log('   ✅ База найдена:', DB_PATH);
       console.log('   📦 Товаров:', db.products?.length || 0);
       console.log('   📋 Заказов:', db.orders?.length || 0);
     } else {
-      console.log('   ❌ База не найдена:', dbPath);
+      console.log('   ❌ База не найдена:', DB_PATH);
     }
   } catch (e) {
     console.log('   ❌ Ошибка:', e.message);

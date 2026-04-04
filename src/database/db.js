@@ -1,26 +1,38 @@
 const fs = require('fs');
 const path = require('path');
+const config = require('../config');
 
-const DB_PATH = path.join(__dirname, '../../data/db.json');
+const DB_PATH = config.dbPath;
+const EMPTY_DB = { products: [], orders: [], reviews: [], works: [] };
+
+function normalizeDb(data = {}) {
+  return {
+    products: Array.isArray(data.products) ? data.products : [],
+    orders: Array.isArray(data.orders) ? data.orders : [],
+    reviews: Array.isArray(data.reviews) ? data.reviews : [],
+    works: Array.isArray(data.works) ? data.works : []
+  };
+}
 
 function readDb() {
   try {
     if (!fs.existsSync(DB_PATH)) {
-      const initial = { products: [], orders: [], reviews: [], works: [] };
+      const initial = { ...EMPTY_DB };
       writeDb(initial);
       return initial;
     }
-    return JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+
+    return normalizeDb(JSON.parse(fs.readFileSync(DB_PATH, 'utf8')));
   } catch (e) {
     console.error('DB read error:', e.message);
-    return { products: [], orders: [], reviews: [], works: [] };
+    return { ...EMPTY_DB };
   }
 }
 
 function writeDb(data) {
   const dir = path.dirname(DB_PATH);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf8');
+  fs.writeFileSync(DB_PATH, `${JSON.stringify(normalizeDb(data), null, 2)}\n`, 'utf8');
 }
 
 // === PRODUCTS ===
@@ -35,7 +47,7 @@ module.exports.createProduct = (data) => {
     category: data.category,
     price: Number(data.price),
     description: data.description || '',
-    image: data.image || 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80',
+    image: data.image || 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
     in_stock: data.in_stock !== false,
     created_at: new Date().toISOString()
   };
@@ -62,11 +74,13 @@ module.exports.deleteProduct = (id) => {
 // === ORDERS ===
 module.exports.createOrder = (data) => {
   const db = readDb();
+  const blindsType = data.blindsType || data.blinds_type || '';
   const order = {
     id: Date.now(),
     name: data.name,
     phone: data.phone,
-    blinds_type: data.blindsType,
+    blindsType,
+    blinds_type: blindsType,
     message: data.message || '',
     created_at: new Date().toISOString()
   };

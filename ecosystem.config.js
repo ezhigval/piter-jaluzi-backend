@@ -1,6 +1,6 @@
 module.exports = {
   apps: [{
-    name: 'prozhaluzi-back',
+    name: 'piter-jaluzi-back',
     script: 'src/index.js',
     instances: 1,
     exec_mode: 'fork',

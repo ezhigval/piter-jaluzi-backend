@@ -1,6 +1,8 @@
 const db = require('../../database/db');
 const { mainKeyboard, cancelKeyboard, categoryKeyboard, editProductKeyboard, productsMenuKeyboard } = require('../keyboards/main');
-const { getUserState, setUserState, clearUserState } = require('../middleware/state');
+const { setUserState, clearUserState } = require('../middleware/state');
+const { normalizeBlindsType, sanitizeLongText, sanitizeText } = require('../../utils/sanitize');
+const { escapeTelegramMarkdown } = require('../../utils/telegram');
 
 // Показать товары
 async function showProducts(bot, chatId) {
@@ -12,8 +14,8 @@ async function showProducts(bot, chatId) {
   
   let text = `📦 *Товары (${products.length})*\n\n`;
   products.slice(0, 10).forEach(p => {
-    text += `*#${p.id}* ${p.name}\n`;
-    text += `${p.category} • ${p.price}₽/м² • ${p.in_stock ? '✅' : '❌'}\n\n`;
+    text += `*#${p.id}* ${escapeTelegramMarkdown(p.name)}\n`;
+    text += `${escapeTelegramMarkdown(p.category)} • ${p.price}₽/м² • ${p.in_stock ? '✅' : '❌'}\n\n`;
   });
   
   if (products.length > 10) {
@@ -34,7 +36,7 @@ async function showStats(bot, chatId) {
     `В наличии: *${inStock}*\n` +
     `Нет: *${products.length - inStock}*\n` +
     `Категорий: *${categories.length}*\n\n` +
-    `Категории:\n${categories.map(c => '• ' + c).join('\n')}`;
+    `Категории:\n${categories.map(c => '• ' + escapeTelegramMarkdown(c)).join('\n')}`;
   
   bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...mainKeyboard });
 }
@@ -57,7 +59,7 @@ async function startEdit(bot, chatId) {
   
   let text = '✏️ *Редактирование*\n\nВведите ID товара:\n\n';
   products.slice(0, 10).forEach(p => {
-    text += `*#${p.id}* ${p.name} — ${p.price}₽\n`;
+    text += `*#${p.id}* ${escapeTelegramMarkdown(p.name)} — ${p.price}₽\n`;
   });
   
   bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...cancelKeyboard });
@@ -71,7 +73,7 @@ async function startDelete(bot, chatId) {
   
   let text = '❌ *Удаление*\n\nВведите ID для удаления:\n\n';
   products.slice(0, 10).forEach(p => {
-    text += `*#${p.id}* ${p.name}\n`;
+    text += `*#${p.id}* ${escapeTelegramMarkdown(p.name)}\n`;
   });
   
   bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...cancelKeyboard });
@@ -83,9 +85,9 @@ async function handleState(bot, msg, state) {
   const chatId = msg.chat.id;
   const text = msg.text;
   
-  if (text === '❌ Отмена') {
+  if (text === '❌ Отмена' || text === '⬅️ Назад' || text === '⬅️ В меню') {
     clearUserState(chatId);
-    return bot.sendMessage(chatId, 'Отменено.', mainKeyboard);
+    return bot.sendMessage(chatId, 'Возврат в меню.', mainKeyboard);
   }
   
   if (state.action === 'add') await handleAdd(bot, msg, state);
@@ -101,11 +103,21 @@ async function handleAdd(bot, msg, state) {
   
   switch (state.step) {
     case 1:
-      state.product.name = text; state.step = 2;
+      state.product.name = sanitizeText(text, 120);
+      if (!state.product.name) {
+        bot.sendMessage(chatId, '❌ Название не может быть пустым.');
+        return;
+      }
+      state.step = 2;
       bot.sendMessage(chatId, '2/5: Выберите категорию:', categoryKeyboard);
       break;
     case 2:
-      state.product.category = text; state.step = 3;
+      state.product.category = normalizeBlindsType(text);
+      if (!state.product.category) {
+        bot.sendMessage(chatId, '❌ Укажите категорию.');
+        return;
+      }
+      state.step = 3;
       bot.sendMessage(chatId, '3/5: Цена за м² (число):', cancelKeyboard);
       break;
     case 3:
@@ -115,11 +127,12 @@ async function handleAdd(bot, msg, state) {
       bot.sendMessage(chatId, '4/5: Описание (или "-"):', cancelKeyboard);
       break;
     case 4:
-      state.product.description = text === '-' ? '' : text; state.step = 5;
+      state.product.description = text === '-' ? '' : sanitizeLongText(text, 2000);
+      state.step = 5;
       bot.sendMessage(chatId, '5/5: URL фото или отправьте фото файлом (или "-"):', cancelKeyboard);
       break;
     case 5:
-      state.product.image = text === '-' ? null : text;
+      state.product.image = text === '-' ? null : sanitizeText(text, 1000);
       state.product.in_stock = true;
       const product = db.createProduct(state.product);
       clearUserState(chatId);
@@ -138,7 +151,7 @@ async function handleEditSelect(bot, msg, state) {
   
   setUserState(chatId, { action: 'edit', product, editField: null });
   
-  const text = `✏️ *#${id}*\n${product.name}\n${product.price}₽\n\nВыберите что изменить:`;
+  const text = `✏️ *#${id}*\n${escapeTelegramMarkdown(product.name)}\n${product.price}₽\n\nВыберите что изменить:`;
   bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...editProductKeyboard });
 }
 
@@ -194,7 +207,9 @@ async function handleEdit(bot, msg, state) {
       bot.sendMessage(chatId, '❌ Используйте отправку файла, не текст');
       return;
     } else {
-      update[state.editField] = text;
+      update[state.editField] = state.editField === 'category'
+        ? normalizeBlindsType(text)
+        : sanitizeText(text, state.editField === 'name' ? 120 : 80);
     }
     
     db.updateProduct(state.product.id, update);

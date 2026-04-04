@@ -10,32 +10,74 @@ process.on('unhandledRejection', (reason, promise) => {
 
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
+const config = require('./config');
 const productsRouter = require('./routes/products');
 const ordersRouter = require('./routes/orders');
 const reviewsRouter = require('./routes/reviews');
-const { initBot } = require('./telegram');
-const { initEmailListener } = require('./services/emailListener');
+const { initBot, stopBot } = require('./telegram');
+const { initEmailListener, stopEmailListener } = require('./services/emailListener');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = config.port;
+
+app.set('trust proxy', 1);
 
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:4321', 'http://127.0.0.1:4321'],
-  credentials: true
+  origin(origin, callback) {
+    if (!origin || config.corsOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(null, false);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning']
 };
 
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: 'Too many requests, please try again later' }
+});
+
+const orderLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: 'Too many orders, please try again later' }
+});
+
+app.use(helmet({
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+}));
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Static files
 app.use('/uploads', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', corsOptions.origin);
+  const origin = req.headers.origin;
+
+  if (origin && config.corsOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Vary', 'Origin');
+  } else {
+    res.header('Access-Control-Allow-Origin', '*');
+  }
+
   res.header('Access-Control-Allow-Methods', 'GET');
+  res.header('Cache-Control', 'public, max-age=86400');
   next();
-}, express.static(path.join(__dirname, 'uploads'), {
+}, express.static(config.uploadsDir, {
   maxAge: '1d',
   etag: true
 }));
@@ -43,15 +85,15 @@ app.use('/uploads', (req, res, next) => {
 // Logging
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
-    console.log(`${new Date().toISOString()} ${req.method} ${req.path}`);
+    console.log(`${new Date().toISOString()} ${req.method} ${req.path} from ${req.ip}`);
     next();
   });
 }
 
 // Routes
-app.use('/api/products', productsRouter);
-app.use('/api/orders', ordersRouter);
-app.use('/api/reviews', reviewsRouter);
+app.use('/api/products', apiLimiter, productsRouter);
+app.use('/api/orders', orderLimiter, ordersRouter);
+app.use('/api/reviews', apiLimiter, reviewsRouter);
 
 // Health
 app.get('/health', (req, res) => {
@@ -61,7 +103,7 @@ app.get('/health', (req, res) => {
 // API Info
 app.get('/api', (req, res) => {
   res.json({
-    name: 'ProZhalyuzi API',
+    name: 'Piter-Jaluzi API',
     version: '1.0.0',
     endpoints: {
       products: 'GET /api/products',
@@ -82,19 +124,20 @@ app.use((req, res) => {
 // Error handler
 app.use((err, req, res, next) => {
   console.error('❌ Error:', err.message);
-  res.status(500).json({ success: false, error: 'Internal error' });
+  res.status(500).json({ success: false, error: 'Internal server error' });
 });
 
 // Start
-app.listen(PORT, async () => {
+const server = app.listen(PORT, async () => {
   console.log('\n🚀 Backend running on port ' + PORT);
-  console.log('📁 Uploads: http://localhost:' + PORT + '/uploads/products');
-  console.log('📡 CORS: ' + (process.env.CORS_ORIGIN || 'http://localhost:4321'));
-  console.log('🤖 Telegram: ' + (process.env.TELEGRAM_BOT_TOKEN ? '✅' : '❌'));
-  console.log('✉️ Email (outgoing): ' + (process.env.EMAIL_USER ? '✅' : '❌'));
-  console.log('📬 Email (incoming): ' + (process.env.INCOMING_EMAIL_USER ? '✅' : '❌'));
-  console.log('📨 Forward to: ' + (process.env.FORWARD_EMAIL || 'not set'));
-  console.log('📍 API: http://localhost:' + PORT + '/api\n');
+  console.log('📁 Uploads: ' + config.publicApiBaseUrl + '/uploads/products');
+  console.log('💾 Storage: ' + (config.storageRoot || 'project-local filesystem'));
+  console.log('📡 CORS: ' + config.corsOrigins.join(', '));
+  console.log('🤖 Telegram: ' + (config.telegramBotToken ? '✅' : '❌'));
+  console.log('✉️ Email (outgoing): ' + (config.email.user ? '✅' : '❌'));
+  console.log('📬 Email (incoming): ' + (config.incomingEmail.user ? '✅' : '❌'));
+  console.log('📨 Forward to: ' + (config.forwardEmail || 'not set'));
+  console.log('📍 API: ' + config.publicApiBaseUrl + '/api\n');
   
   // Init Telegram bot
   initBot();
@@ -104,3 +147,22 @@ app.listen(PORT, async () => {
     initEmailListener();
   }, 3000);
 });
+
+function shutdown(signal) {
+  console.log(`\n🛑 Received ${signal}, shutting down...`);
+  stopBot(signal);
+  stopEmailListener();
+
+  server.close(() => {
+    console.log('✅ HTTP server closed');
+    process.exit(0);
+  });
+
+  setTimeout(() => {
+    console.error('❌ Forced shutdown');
+    process.exit(1);
+  }, 10000).unref();
+}
+
+process.on('SIGINT', () => shutdown('SIGINT'));
+process.on('SIGTERM', () => shutdown('SIGTERM'));

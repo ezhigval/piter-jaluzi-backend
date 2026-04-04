@@ -1,22 +1,48 @@
 const nodemailer = require('nodemailer');
+const config = require('../config');
 
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: parseInt(process.env.EMAIL_PORT) || 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+let transporter = null;
+
+function isEmailConfigured() {
+  return Boolean(config.email.host && config.email.user && config.email.pass);
+}
+
+function getTransporter() {
+  if (!isEmailConfigured()) {
+    return null;
+  }
+
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      disableFileAccess: true,
+      disableUrlAccess: true,
+      host: config.email.host,
+      port: config.email.port,
+      secure: config.email.port === 465,
+      auth: {
+        user: config.email.user,
+        pass: config.email.pass
+      }
+    });
+  }
+
+  return transporter;
+}
 
 async function sendOrderEmail(order) {
+  const blindsType = order.blindsType || order.blinds_type || '—';
+
+  if (!isEmailConfigured()) {
+    return { success: false, skipped: true, error: 'Email transport is not configured' };
+  }
+
   try {
-    await transporter.sendMail({
-      from: `"ProZhalyuzi" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER,
+    const activeTransporter = getTransporter();
+    await activeTransporter.sendMail({
+      from: `"Питер-Жалюзи" <${config.email.user}>`,
+      to: config.email.user,
       subject: `🔔 Заявка: ${order.name}`,
-      html: `<b>Новая заявка</b><br>👤 ${order.name}<br>📱 ${order.phone}<br>🪟 ${order.blindsType}<br>💬 ${order.message||'—'}`,
+      html: `<b>Новая заявка</b><br>👤 ${order.name}<br>📱 ${order.phone}<br>🪟 ${blindsType}<br>💬 ${order.message||'—'}`,
     });
     return { success: true };
   } catch (e) {
@@ -25,4 +51,4 @@ async function sendOrderEmail(order) {
   }
 }
 
-module.exports = { sendOrderEmail };
+module.exports = { sendOrderEmail, isEmailConfigured, getTransporter };

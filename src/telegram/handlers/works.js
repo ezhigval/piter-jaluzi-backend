@@ -1,6 +1,9 @@
 const db = require('../../database/db');
+const { saveTelegramPhoto } = require('../../services/uploads');
 const { mainKeyboard, cancelKeyboard, worksMenuKeyboard } = require('../keyboards/main');
 const { getUserState, setUserState, clearUserState } = require('../middleware/state');
+const { sanitizeText } = require('../../utils/sanitize');
+const { escapeTelegramMarkdown } = require('../../utils/telegram');
 
 // Показать все работы
 async function showAllWorks(bot, chatId) {
@@ -11,8 +14,8 @@ async function showAllWorks(bot, chatId) {
   
   let text = `🖼️ *Наши работы (${works.length})*\n\n`;
   works.slice(0, 10).forEach(w => {
-    text += `*#${w.id}* ${w.title || 'Без названия'}\n`;
-    text += `${w.photo}\n\n`;
+    text += `*#${w.id}* ${escapeTelegramMarkdown(w.title || 'Без названия')}\n`;
+    text += `${escapeTelegramMarkdown(w.photo)}\n\n`;
   });
   
   if (works.length > 10) text += `... и ещё ${works.length - 10} работ`;
@@ -40,7 +43,7 @@ async function startDeleteWork(bot, chatId) {
   
   let text = '❌ *Удаление работы*\n\nВведите ID работы:\n\n';
   works.slice(0, 10).forEach(w => {
-    text += `*#${w.id}* ${w.title || 'Без названия'}\n`;
+    text += `*#${w.id}* ${escapeTelegramMarkdown(w.title || 'Без названия')}\n`;
   });
   
   bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...cancelKeyboard });
@@ -52,7 +55,7 @@ async function handleState(bot, msg, state) {
   const chatId = msg.chat.id;
   const text = msg.text;
   
-  if (text === '❌ Отмена' || text === '⬅️ В меню') {
+  if (text === '❌ Отмена' || text === '⬅️ Назад' || text === '⬅️ В меню') {
     clearUserState(chatId);
     return bot.sendMessage(chatId, 'Возврат в меню.', mainKeyboard);
   }
@@ -68,11 +71,16 @@ async function handleAddWork(bot, msg, state) {
   
   switch (state.step) {
     case 1:
-      state.work.photo = text; state.step = 2;
+      state.work.photo = sanitizeText(text, 1000);
+      if (!state.work.photo) {
+        bot.sendMessage(chatId, '❌ Укажите URL фото или отправьте изображение.');
+        return;
+      }
+      state.step = 2;
       bot.sendMessage(chatId, '2/2: Название (или "-" для пропуска):', cancelKeyboard);
       break;
     case 2:
-      state.work.title = text === '-' ? '' : text;
+      state.work.title = text === '-' ? '' : sanitizeText(text, 140);
       
       const data = db.readDb();
       if (!data.works) data.works = [];
@@ -117,10 +125,7 @@ async function handlePhotoUpload(bot, msg, state) {
   const photo = msg.photo[msg.photo.length - 1];
   
   try {
-    const fileLink = await bot.getFileLink(photo.file_id);
-    const imageUrl = fileLink.href;
-    
-    state.work.photo = imageUrl;
+    state.work.photo = await saveTelegramPhoto(bot, photo.file_id, 'works');
     state.step = 2;
     
     bot.sendMessage(chatId, '2/2: Название (или "-" для пропуска):', cancelKeyboard);

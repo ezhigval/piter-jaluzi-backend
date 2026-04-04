@@ -1,6 +1,8 @@
 const db = require('../../database/db');
 const { mainKeyboard, cancelKeyboard, categoryKeyboard, reviewsMenuKeyboard } = require('../keyboards/main');
-const { getUserState, setUserState, clearUserState } = require('../middleware/state');
+const { setUserState, clearUserState } = require('../middleware/state');
+const { normalizeBlindsType, sanitizeLongText, sanitizeText } = require('../../utils/sanitize');
+const { escapeTelegramMarkdown } = require('../../utils/telegram');
 
 // Показать все отзывы
 async function showAllReviews(bot, chatId) {
@@ -11,9 +13,9 @@ async function showAllReviews(bot, chatId) {
   
   let text = `📝 *Отзывы (${reviews.length})*\n\n`;
   reviews.slice(0, 10).forEach(r => {
-    text += `*#${r.id}* ${r.name}\n`;
-    text += `${r.blindsType} • ⭐${r.rating}\n`;
-    text += `"${r.comment.substring(0, 50)}${r.comment.length > 50 ? '...' : ''}"\n\n`;
+    text += `*#${r.id}* ${escapeTelegramMarkdown(r.name)}\n`;
+    text += `${escapeTelegramMarkdown(r.blindsType)} • ⭐${r.rating}\n`;
+    text += `"${escapeTelegramMarkdown(r.comment.substring(0, 50))}${r.comment.length > 50 ? '...' : ''}"\n\n`;
   });
   
   if (reviews.length > 10) text += `... и ещё ${reviews.length - 10} отзывов`;
@@ -41,7 +43,7 @@ async function startDeleteReview(bot, chatId) {
   
   let text = '❌ *Удаление отзыва*\n\nВведите ID отзыва:\n\n';
   reviews.slice(0, 10).forEach(r => {
-    text += `*#${r.id}* ${r.name} — ${r.blindsType}\n`;
+    text += `*#${r.id}* ${escapeTelegramMarkdown(r.name)} — ${escapeTelegramMarkdown(r.blindsType)}\n`;
   });
   
   bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...cancelKeyboard });
@@ -53,7 +55,7 @@ async function handleState(bot, msg, state) {
   const chatId = msg.chat.id;
   const text = msg.text;
   
-  if (text === '❌ Отмена' || text === '⬅️ В меню') {
+  if (text === '❌ Отмена' || text === '⬅️ Назад' || text === '⬅️ В меню') {
     clearUserState(chatId);
     return bot.sendMessage(chatId, 'Возврат в меню.', mainKeyboard);
   }
@@ -69,11 +71,17 @@ async function handleAddReview(bot, msg, state) {
   
   switch (state.step) {
     case 1:
-      state.review.name = text; state.step = 2;
+      state.review.name = sanitizeText(text, 120);
+      if (!state.review.name) {
+        bot.sendMessage(chatId, '❌ Имя не может быть пустым.');
+        return;
+      }
+      state.step = 2;
       bot.sendMessage(chatId, '2/4: Тип жалюзи:', categoryKeyboard);
       break;
     case 2:
-      state.review.blindsType = text; state.step = 3;
+      state.review.blindsType = normalizeBlindsType(text);
+      state.step = 3;
       bot.sendMessage(chatId, '3/4: Оценка (1-5):', cancelKeyboard);
       break;
     case 3:
@@ -83,7 +91,11 @@ async function handleAddReview(bot, msg, state) {
       bot.sendMessage(chatId, '4/4: Текст отзыва:', cancelKeyboard);
       break;
     case 4:
-      state.review.comment = text;
+      state.review.comment = sanitizeLongText(text, 2000);
+      if (!state.review.comment) {
+        bot.sendMessage(chatId, '❌ Текст отзыва не может быть пустым.');
+        return;
+      }
       state.review.photos = [];
       
       const data = db.readDb();
@@ -97,7 +109,7 @@ async function handleAddReview(bot, msg, state) {
       db.writeDb(data);
       
       clearUserState(chatId);
-      bot.sendMessage(chatId, `✅ *Отзыв создан #${state.review.id}*\n${state.review.name}\n⭐${state.review.rating}`, { parse_mode: 'Markdown', ...mainKeyboard });
+      bot.sendMessage(chatId, `✅ *Отзыв создан #${state.review.id}*\n${escapeTelegramMarkdown(state.review.name)}\n⭐${state.review.rating}`, { parse_mode: 'Markdown', ...mainKeyboard });
       break;
   }
 }

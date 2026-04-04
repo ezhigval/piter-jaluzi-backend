@@ -1,9 +1,7 @@
-const fs = require('fs');
-const path = require('path');
-
-// Путь внутри src/uploads/products
-const UPLOAD_DIR = path.join(__dirname, '../../uploads/products');
-const API_URL = process.env.API_URL || 'http://localhost:3001';
+const db = require('../../database/db');
+const { saveTelegramPhoto } = require('../../services/uploads');
+const { clearUserState } = require('../middleware/state');
+const { escapeTelegramMarkdown } = require('../../utils/telegram');
 
 async function handlePhotoUpload(bot, msg, state) {
   const chatId = msg.chat.id;
@@ -21,44 +19,22 @@ async function handlePhotoUpload(bot, msg, state) {
   console.log(`[Photo] File ID: ${photo.file_id}, Size: ${photo.file_size}`);
   
   try {
-    const fileLink = await bot.getFileLink(photo.file_id);
-    const response = await fetch(fileLink);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    
-    const buffer = await response.arrayBuffer();
-    const data = Buffer.from(buffer);
-    console.log(`[Photo] Downloaded ${data.length} bytes`);
-    
-    const ext = 'jpg';
-    const filename = `${Date.now()}-${Math.random().toString(36).substring(7)}.${ext}`;
-    const filepath = path.join(UPLOAD_DIR, filename);
-    
-    // Создаём папку если нет
-    if (!fs.existsSync(UPLOAD_DIR)) {
-      fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-      console.log('[Photo] Created upload directory:', UPLOAD_DIR);
-    }
-    
-    fs.writeFileSync(filepath, data);
-    console.log(`[Photo] Saved to: ${filepath}`);
-    
-    // Полный URL для фронтенда
-    const imageUrl = `${API_URL}/uploads/products/${filename}`;
-    const db = require('../../database/db');
+    const imagePath = await saveTelegramPhoto(bot, photo.file_id, 'products');
     
     if (state.action === 'add') {
-      state.product.image = imageUrl;
+      state.product.image = imagePath;
       
       if (state.step === 5) {
         state.product.in_stock = true;
         const product = db.createProduct(state.product);
-        await bot.sendMessage(chatId, `✅ *Создан #${product.id}*\n${product.name}\n${product.price}₽\n\n📷 Фото загружено!`, { parse_mode: 'Markdown' });
+        clearUserState(chatId);
+        await bot.sendMessage(chatId, `✅ *Создан #${product.id}*\n${escapeTelegramMarkdown(product.name)}\n${product.price}₽\n\n📷 Фото загружено!`, { parse_mode: 'Markdown' });
       } else {
         await bot.sendMessage(chatId, `📷 Фото загружено! Продолжите...`);
       }
     } else if (state.action === 'edit') {
-      db.updateProduct(state.product.id, { image: imageUrl });
-      state.product.image = imageUrl;
+      db.updateProduct(state.product.id, { image: imagePath });
+      state.product.image = imagePath;
       
       const kb = {
         reply_markup: {

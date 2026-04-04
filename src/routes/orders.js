@@ -2,29 +2,20 @@ const express = require('express');
 const router = express.Router();
 const db = require('../database/db');
 const { sendOrderNotification } = require('../services/telegram');
-
-// Простая санитизация
-function sanitize(input) {
-  if (typeof input !== 'string') return input;
-  return input
-    .replace(/[<>]/g, '') // Удаляем теги
-    .trim()
-    .substring(0, 1000); // Ограничиваем длину
-}
+const { sendOrderEmail } = require('../services/email');
+const { normalizeBlindsType, sanitizeLongText, sanitizePhone, sanitizeText } = require('../utils/sanitize');
 
 router.post('/', async (req, res) => {
   console.log('📥 Order request from:', req.ip);
   
   try {
-    // Санитизация входных данных
     const { name, phone, blindsType, message } = req.body || {};
     
-    const sanitizedName = sanitize(name);
-    const sanitizedPhone = sanitize(phone);
-    const sanitizedBlindsType = sanitize(blindsType);
-    const sanitizedMessage = sanitize(message);
+    const sanitizedName = sanitizeText(name, 120);
+    const sanitizedPhone = sanitizePhone(phone);
+    const sanitizedBlindsType = normalizeBlindsType(blindsType);
+    const sanitizedMessage = sanitizeLongText(message, 1000);
     
-    // Валидация
     if (!sanitizedName || !sanitizedPhone || !sanitizedBlindsType) {
       return res.status(400).json({ 
         success: false, 
@@ -32,7 +23,6 @@ router.post('/', async (req, res) => {
       });
     }
 
-    // Валидация телефона (простая)
     const phoneRegex = /^[\d\+\-\(\)\s]{10,20}$/;
     if (!phoneRegex.test(sanitizedPhone)) {
       return res.status(400).json({ success: false, error: 'Invalid phone format' });
@@ -46,14 +36,30 @@ router.post('/', async (req, res) => {
     });
     console.log('✅ Saved order #', order.id);
 
-    // Уведомления в фоне
-    sendOrderNotification(order).catch(e => console.error('TG error:', e.message));
+    const [telegramResult, emailResult] = await Promise.allSettled([
+      sendOrderNotification(order),
+      sendOrderEmail(order)
+    ]);
 
-    res.status(201).json({ success: true, orderId: order.id });
+    const notifications = {
+      telegram: telegramResult.status === 'fulfilled'
+        ? telegramResult.value
+        : { success: false, error: telegramResult.reason?.message || 'Telegram notification failed' },
+      email: emailResult.status === 'fulfilled'
+        ? emailResult.value
+        : { success: false, error: emailResult.reason?.message || 'Email notification failed' }
+    };
+
+    res.status(201).json({
+      success: true,
+      orderId: order.id,
+      message: 'Order created',
+      notifications
+    });
     
   } catch (err) {
     console.error('❌ Order route error:', err);
-    res.status(500).json({ success: false, error: 'Internal error' });
+    res.status(500).json({ success: false, error: 'Internal server error' });
   }
 });
 

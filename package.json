@@ -1,11 +1,16 @@
 {
-  "name": "prozhaluzi-back",
+  "name": "piter-jaluzi-back",
   "version": "1.0.0",
-  "description": "Backend for ProZhalyuzi",
+  "description": "Backend for Piter-Jaluzi",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "check": "node --check src/index.js && node --check test-backend.js && node --check test-api.js && node --check test-order.js && node --check test-front-contract.js && node --check test-telegram-bot.js",
+    "normalize:data": "node src/scripts/normalize-db.js",
+    "test:smoke": "node test-backend.js",
+    "test:contract": "node test-front-contract.js",
+    "test:telegram": "node test-telegram-bot.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -13,12 +18,10 @@
     "express": "^4.18.2",
     "express-rate-limit": "^8.3.2",
     "helmet": "^8.1.0",
+    "imapflow": "^1.2.18",
     "mailparser": "^3.9.6",
-    "multer": "^2.1.1",
-    "node-imap": "^0.9.6",
-    "node-telegram-bot-api": "^0.64.0",
-    "nodemailer": "^6.9.7",
-    "uuid": "^13.0.0"
+    "nodemailer": "^8.0.4",
+    "telegraf": "^4.16.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

@@ -1,205 +1,181 @@
-const Imap = require('node-imap');
+const { ImapFlow } = require('imapflow');
 const { simpleParser } = require('mailparser');
+const config = require('../config');
+const { getTransporter, isEmailConfigured } = require('./email');
 const { getBot } = require('../telegram');
 const { getAuthorizedChats } = require('../telegram/middleware/auth');
 
-let imap = null;
+const CHECK_INTERVAL_MS = 180000;
+
 let checkInterval = null;
+let isChecking = false;
 let processedUids = new Set();
 
-function initEmailListener() {
-  const config = {
-    user: process.env.INCOMING_EMAIL_USER,
-    password: process.env.INCOMING_EMAIL_PASS,
-    host: process.env.INCOMING_EMAIL_HOST,
-    port: parseInt(process.env.INCOMING_EMAIL_PORT) || 993,
-    tls: true,
-    tlsOptions: { servername: process.env.INCOMING_EMAIL_HOST }
-  };
-
-  if (!config.user || !config.password) {
-    console.log('⚠️  Email listener not configured (missing INCOMING_EMAIL_*)');
-    return null;
-  }
-
-  console.log('📬 Starting email listener for:', config.user);
-
-  imap = new Imap(config);
-
-  imap.on('error', (err) => {
-    console.error('❌ IMAP error:', err.message);
-  });
-
-  imap.on('ready', () => {
-    console.log('✅ IMAP connected successfully');
-    imap.openBox('INBOX', false, (err, box) => {
-      if (err) {
-        console.error('❌ Error opening inbox:', err);
-        return;
-      }
-      console.log('📬 Inbox opened, checking for new emails...');
-      checkNewEmails();
-    });
-  });
-
-  imap.on('end', () => {
-    console.log('⚠️  IMAP connection ended, reconnecting in 30s...');
-    setTimeout(() => {
-      if (imap) imap.connect();
-    }, 30000);
-  });
-
-  imap.connect();
-
-  // Проверка каждые 3 минуты
-  checkInterval = setInterval(() => {
-    if (imap && imap.state === 'authenticated') {
-      checkNewEmails();
-    }
-  }, 180000);
-
-  return imap;
+function isEmailListenerConfigured() {
+  return Boolean(
+    config.incomingEmail.user &&
+    config.incomingEmail.pass &&
+    config.incomingEmail.host
+  );
 }
 
-function checkNewEmails() {
-  if (!imap) return;
-
-  imap.search(['UNSEEN'], (err, results) => {
-    if (err) {
-      console.error('❌ Search error:', err);
-      return;
+function buildImapConfig() {
+  return {
+    host: config.incomingEmail.host,
+    port: config.incomingEmail.port,
+    secure: true,
+    auth: {
+      user: config.incomingEmail.user,
+      pass: config.incomingEmail.pass
     }
-    
-    if (!results || results.length === 0) {
+  };
+}
+
+function rememberProcessedEmail(emailKey) {
+  processedUids.add(emailKey);
+
+  if (processedUids.size > 100) {
+    processedUids = new Set(Array.from(processedUids).slice(-100));
+  }
+}
+
+async function checkNewEmails() {
+  if (!isEmailListenerConfigured() || isChecking) {
+    return;
+  }
+
+  isChecking = true;
+  const client = new ImapFlow(buildImapConfig());
+  let lock = null;
+
+  try {
+    await client.connect();
+    lock = await client.getMailboxLock('INBOX');
+
+    const results = await client.search({ seen: false }, { uid: true });
+
+    if (!results || !results.length) {
       console.log('📬 No new emails');
       return;
     }
 
     console.log(`📬 Found ${results.length} new email(s)`);
 
-    const fetch = imap.fetch(results, { bodies: '', markSeen: true });
+    for (const uid of results) {
+      const message = await client.fetchOne(String(uid), {
+        source: true,
+        envelope: true,
+        internalDate: true
+      }, { uid: true });
 
-    fetch.on('message', (msg) => {
-      let emailData = {};
-      const seqno = msg.seqno;
+      if (!message?.source) {
+        continue;
+      }
 
-      msg.on('body', (stream) => {
-        simpleParser(stream, (err, parsed) => {
-          if (err) {
-            console.error('❌ Parse error:', err);
-            return;
-          }
+      const parsed = await simpleParser(message.source);
+      const emailData = {
+        from: parsed.from?.text || 'Unknown',
+        to: parsed.to?.text || 'Unknown',
+        subject: parsed.subject || 'No subject',
+        text: parsed.text || '',
+        html: parsed.html || '',
+        date: parsed.date?.toISOString() || new Date().toISOString(),
+        uid
+      };
 
-          emailData = {
-            from: parsed.from?.text || 'Unknown',
-            to: parsed.to?.text || 'Unknown',
-            subject: parsed.subject || 'No subject',
-            text: parsed.text || '',
-            html: parsed.html || '',
-            date: parsed.date?.toISOString() || new Date().toISOString(),
-            seqno: seqno
-          };
+      console.log('📧 Email received:', emailData.subject);
+      await forwardEmail(emailData);
+      await client.messageFlagsAdd([uid], ['\\Seen'], { uid: true });
+      console.log('✅ Email processed:', uid);
+    }
+  } catch (error) {
+    console.error('❌ Email listener error:', error.message);
+  } finally {
+    try {
+      lock?.release();
+    } catch {}
 
-          console.log('📧 Email received:', emailData.subject);
-          forwardEmail(emailData);
-        });
-      });
+    try {
+      await client.logout();
+    } catch {
+      client.close();
+    }
 
-      msg.on('end', () => {
-        console.log('✅ Email processed:', seqno);
-      });
-    });
-
-    fetch.on('error', (err) => {
-      console.error('❌ Fetch error:', err);
-    });
-
-    fetch.on('end', () => {
-      console.log('✅ All emails fetched');
-    });
-  });
+    isChecking = false;
+  }
 }
 
 async function forwardEmail(emailData) {
-  // Защита от дублей
   const emailKey = `${emailData.from}-${emailData.subject}-${emailData.date}`;
   if (processedUids.has(emailKey)) {
     console.log('⚠️  Email already processed, skipping');
     return;
   }
-  processedUids.add(emailKey);
-  
-  // Очищаем старые записи (храним последние 100)
-  if (processedUids.size > 100) {
-    processedUids = new Set(Array.from(processedUids).slice(-100));
-  }
+  rememberProcessedEmail(emailKey);
 
-  const tgMessage = `
-📬 *Новое письмо на почту*
+  const tgMessage = [
+    '📬 Новое письмо на почту',
+    '',
+    `От: ${emailData.from}`,
+    `Кому: ${emailData.to}`,
+    `Тема: ${emailData.subject}`,
+    `Дата: ${new Date(emailData.date).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' })}`,
+    '',
+    'Текст:',
+    `${emailData.text.substring(0, 1000)}${emailData.text.length > 1000 ? '...' : ''}`
+  ].join('\n').trim();
 
-*От:* ${emailData.from}
-*Кому:* ${emailData.to}
-*Тема:* ${emailData.subject}
-*Дата:* ${new Date(emailData.date).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' })}
-
-*Текст:*
-${emailData.text.substring(0, 1000)}${emailData.text.length > 1000 ? '...' : ''}
-  `.trim();
-
-  // 1. Отправка в Telegram
   try {
     await sendTelegramNotification(tgMessage);
     console.log('✅ Telegram notification sent');
-  } catch (e) {
-    console.error('❌ TG notify error:', e.message);
+  } catch (error) {
+    console.error('❌ TG notify error:', error.message);
   }
 
-  // 2. Пересылка на личную почту
-  if (process.env.FORWARD_EMAIL) {
+  if (config.forwardEmail) {
     try {
       await forwardToPersonalEmail(emailData);
-      console.log('✅ Forwarded to personal email:', process.env.FORWARD_EMAIL);
-    } catch (e) {
-      console.error('❌ Forward error:', e.message);
+      console.log('✅ Forwarded to personal email:', config.forwardEmail);
+    } catch (error) {
+      console.error('❌ Forward error:', error.message);
     }
   }
 }
 
 async function sendTelegramNotification(message) {
   const bot = getBot();
-  if (!bot) return { success: false, error: 'Bot not initialized' };
+  if (!bot) {
+    return { success: false, error: 'Bot not initialized' };
+  }
 
   const chats = getAuthorizedChats();
-  if (!chats.length) return { success: false, error: 'No authorized chats' };
+  if (!chats.length) {
+    return { success: false, error: 'No authorized chats' };
+  }
 
   let sent = 0;
   for (const chatId of chats) {
     try {
-      await bot.sendMessage(chatId, message, { parse_mode: 'Markdown', timeout: 10000 });
+      await bot.sendMessage(chatId, message);
       sent++;
-    } catch (e) {
-      console.error('TG send error:', e.message);
+    } catch (error) {
+      console.error('TG send error:', error.message);
     }
   }
+
   return { success: sent > 0, sent };
 }
 
 async function forwardToPersonalEmail(emailData) {
-  const nodemailer = require('nodemailer');
+  if (!isEmailConfigured()) {
+    throw new Error('Outgoing email transport is not configured');
+  }
 
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: parseInt(process.env.EMAIL_PORT) || 465,
-    secure: true,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+  const transporter = getTransporter();
 
   await transporter.sendMail({
-    from: `"${process.env.EMAIL_USER}" <${process.env.EMAIL_USER}>`,
-    to: process.env.FORWARD_EMAIL,
+    from: `"${config.email.user}" <${config.email.user}>`,
+    to: config.forwardEmail,
     subject: `Fwd: ${emailData.subject}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px;">
@@ -227,18 +203,31 @@ async function forwardToPersonalEmail(emailData) {
           ${emailData.html || emailData.text.replace(/\n/g, '<br>')}
         </div>
       </div>
-    `,
+    `
   });
+}
+
+function initEmailListener() {
+  if (!isEmailListenerConfigured()) {
+    console.log('⚠️  Email listener not configured (missing INCOMING_EMAIL_*)');
+    return null;
+  }
+
+  console.log('📬 Starting email listener for:', config.incomingEmail.user);
+  checkNewEmails();
+
+  checkInterval = setInterval(() => {
+    void checkNewEmails();
+  }, CHECK_INTERVAL_MS);
+
+  return { stop: stopEmailListener };
 }
 
 function stopEmailListener() {
   if (checkInterval) {
     clearInterval(checkInterval);
+    checkInterval = null;
     console.log('🛑 Check interval stopped');
-  }
-  if (imap) {
-    imap.end();
-    console.log('🛑 IMAP connection closed');
   }
 }
 
