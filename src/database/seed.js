@@ -1,4 +1,6 @@
 const { getDb, initDb } = require('./initDb');
+const fs = require('fs');
+const path = require('path');
 
 function isSeeded() {
   const db = getDb();
@@ -7,6 +9,22 @@ function isSeeded() {
 }
 
 function seed() {
+  // === ХЕЛПЕРЫ ДЛЯ КОНВЕРТАЦИИ ===
+  const { randomUUID } = require('crypto');
+  const generateId = () => randomUUID().replace(/-/g, '').slice(0, 6).toUpperCase();
+
+  const mapJsonToProduct = (json) => ({
+    id: generateId(),
+    name: json.name,
+    category: json.category,
+    price: null,
+    description: null,
+    image: json.imageFull || json.localPath || null,
+    in_stock: 1,
+    created_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
+  });
+  // === КОНЕЦ ХЕЛПЕРОВ ===
+
   if (isSeeded()) {
     console.log('⏭️  DB already seeded, skipping');
     return;
@@ -15,125 +33,28 @@ function seed() {
   const db = getDb();
 
   const insertProduct = db.prepare(
-    'INSERT INTO products (id, name, category, price, description, image, in_stock, created_at) ' +
-    'VALUES (@id, @name, @category, @price, @description, @image, @in_stock, @created_at)'
+      'INSERT INTO products (id, name, category, price, description, image, in_stock, created_at) ' +
+      'VALUES (@id, @name, @category, @price, @description, @image, @in_stock, @created_at)'
   );
 
   const insertReview = db.prepare(
-    'INSERT INTO reviews (id, name, blindsType, photos, comment, rating, created_at) ' +
-    'VALUES (@id, @name, @blindsType, @photos, @comment, @rating, @created_at)'
+      'INSERT INTO reviews (id, name, blindsType, photos, comment, rating, created_at) ' +
+      'VALUES (@id, @name, @blindsType, @photos, @comment, @rating, @created_at)'
   );
 
   const insertWork = db.prepare(
-    'INSERT INTO works (id, photo, title, created_at) ' +
-    'VALUES (@id, @photo, @title, @created_at)'
+      'INSERT INTO works (id, photo, title, created_at) ' +
+      'VALUES (@id, @photo, @title, @created_at)'
   );
 
   const now = new Date();
 
-  // ====== PRODUCTS ======
-  const products = [
-    {
-      id: 1,
-      name: 'Рулонные жалюзи Mini',
-      category: 'Рулонные',
-      price: 890,
-      description: 'Компактные рулонные жалюзи для небольших окон. Не требуют сверления, крепятся на раму. Идеальны для пластиковых окон.',
-      image: 'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1200&q=80',
-      in_stock: 1,
-      created_at: new Date(now.getFullYear(), now.getMonth() - 12, 1).toISOString()
-    },
-    {
-      id: 2,
-      name: 'Вертикальные жалюзи Classic',
-      category: 'Вертикальные',
-      price: 1200,
-      description: 'Классические вертикальные жалюзи для офисов и дома. Ширина ламели 89мм или 127мм. Большой выбор тканей.',
-      image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
-      in_stock: 1,
-      created_at: new Date(now.getFullYear(), now.getMonth() - 11, 5).toISOString()
-    },
-    {
-      id: 3,
-      name: 'Горизонтальные алюминиевые',
-      category: 'Горизонтальные',
-      price: 1500,
-      description: 'Прочные алюминиевые жалюзи с широким выбором цветов. Ширина ламели 25мм. Влагостойкие, легко моются.',
-      image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80',
-      in_stock: 1,
-      created_at: new Date(now.getFullYear(), now.getMonth() - 10, 10).toISOString()
-    },
-    {
-      id: 4,
-      name: 'Плиссированные шторы',
-      category: 'Плиссе',
-      price: 2200,
-      description: 'Элегантные плиссированные шторы для нестандартных окон. Подходит для мансардных и наклонных окон.',
-      image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
-      in_stock: 1,
-      created_at: new Date(now.getFullYear(), now.getMonth() - 9, 15).toISOString()
-    },
-    {
-      id: 5,
-      name: 'Рулонные шторы День-Ночь',
-      category: 'Рулонные',
-      price: 1800,
-      description: 'Уникальная система с чередующимися полосами ткани. Позволяет регулировать уровень освещённости от полной прозрачности до затемнения.',
-      image: 'https://images.unsplash.com/photo-1615874959474-d609969a20ed?auto=format&fit=crop&w=1200&q=80',
-      in_stock: 1,
-      created_at: new Date(now.getFullYear(), now.getMonth() - 8, 20).toISOString()
-    },
-    {
-      id: 6,
-      name: 'Деревянные жалюзи Premium',
-      category: 'Горизонтальные',
-      price: 3500,
-      description: 'Натуральный бамбук или липа. Экологичные, создают уютную атмосферу. Ширина ламели 50мм.',
-      image: 'https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=800&q=80',
-      in_stock: 0,
-      created_at: new Date(now.getFullYear(), now.getMonth() - 7, 1).toISOString()
-    },
-    {
-      id: 7,
-      name: 'Римские шторы Standart',
-      category: 'Римские',
-      price: 2800,
-      description: 'Собираются в ровные складки при подъёме. Мягкая ткань, стильный вид. Подходят для спальни и гостиной.',
-      image: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1200&q=80',
-      in_stock: 1,
-      created_at: new Date(now.getFullYear(), now.getMonth() - 6, 10).toISOString()
-    },
-    {
-      id: 8,
-      name: 'Вертикальные жалюзи Мультифлекс',
-      category: 'Вертикальные',
-      price: 1900,
-      description: 'Современная волнообразная форма ламелей. Эффектно выглядят в интерьере, мягко рассеивают свет.',
-      image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=80',
-      in_stock: 1,
-      created_at: new Date(now.getFullYear(), now.getMonth() - 5, 5).toISOString()
-    },
-    {
-      id: 9,
-      name: 'Рулонные шторы Blackout',
-      category: 'Рулонные',
-      price: 2100,
-      description: 'Полное затемнение — 100% защита от света. Идеальны для спальни, детской, домашних кинотеатров.',
-      image: 'https://images.unsplash.com/photo-1560185007-cde436f6a4d0?auto=format&fit=crop&w=800&q=80',
-      in_stock: 1,
-      created_at: new Date(now.getFullYear(), now.getMonth() - 4, 15).toISOString()
-    },
-    {
-      id: 10,
-      name: 'Шторы Плиссе на балкон',
-      category: 'Плиссе',
-      price: 1600,
-      description: 'Специальная система для балконных и лоджийных окон. Крепление на верхнюю и нижнюю створку.',
-      image: 'https://images.unsplash.com/photo-1600573472550-8090b5e0745e?auto=format&fit=crop&w=800&q=80',
-      in_stock: 0,
-      created_at: new Date(now.getFullYear(), now.getMonth() - 3, 1).toISOString()
-    }
-  ];
+  // ====== PRODUCTS из database.json ======
+  const jsonPath = path.join(__dirname, 'database.json');
+  const rawData = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+  const jsonProducts = Array.isArray(rawData) ? rawData : [rawData];
+  const products = jsonProducts.map(mapJsonToProduct);
+  // ====== КОНЕЦ PRODUCTS ======
 
   // ====== REVIEWS ======
   const reviewNames = [
@@ -166,8 +87,8 @@ function seed() {
     name: reviewNames[i],
     blindsType: reviewCategories[i],
     photos: i % 3 === 0
-      ? JSON.stringify([`https://images.unsplash.com/photo-160058515${20 + i}0-27b2c045efd${i + 1}?auto=format&fit=crop&w=600&q=80`])
-      : '[]',
+        ? JSON.stringify([`https://images.unsplash.com/photo-160058515${20 + i}0-27b2c045efd${i + 1}?auto=format&fit=crop&w=600&q=80`])
+        : '[]',
     comment,
     rating: [5, 4, 5, 5, 4, 5, 5, 4, 5, 5][i],
     created_at: new Date(now.getFullYear(), now.getMonth() - 2, (i + 1) * 3).toISOString()
