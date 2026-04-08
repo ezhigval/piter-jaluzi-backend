@@ -11,7 +11,7 @@ let db = null;
 function createTables() {
   db.exec(`
     CREATE TABLE IF NOT EXISTS products (
-      id INTEGER PRIMARY KEY,
+      id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
       category TEXT NOT NULL,
       price INTEGER NOT NULL,
