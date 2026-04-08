@@ -59,6 +59,45 @@ function createBotApi(telegrafApp) {
 }
 
 function setupHandlers(telegrafApp, botApi) {
+  // Обработчик callback_query для инлайн-кнопок (пагинация)
+  telegrafApp.on('callback_query', async (ctx) => {
+    const chatId = ctx.chat.id;
+    const data = ctx.callbackQuery.data;
+
+    if (!data) return ctx.answerCbQuery();
+
+    // Пагинация товаров: prod_page:N
+    if (data.startsWith('prod_page:')) {
+      await ctx.answerCbQuery();
+      const page = parseInt(data.split(':')[1]);
+      if (isNaN(page) || page < 1) return;
+
+      const state = getUserState(chatId);
+
+      if (!state) {
+        await showProducts(botApi, chatId, page);
+      } else if (state.action === 'edit_select') {
+        state.page = page;
+        await startEdit(botApi, chatId, page);
+      } else if (state.action === 'delete') {
+        state.page = page;
+        await startDelete(botApi, chatId, page);
+      } else {
+        await showProducts(botApi, chatId, page);
+      }
+      return;
+    }
+
+    // Игнорирование кликов по неактивным кнопкам
+    if (data === 'ignore') {
+      await ctx.answerCbQuery();
+      return;
+    }
+
+    // Остальные callback_query игнорируем
+    await ctx.answerCbQuery();
+  });
+
   telegrafApp.use(async (ctx, next) => {
     const msg = ctx.message;
 
@@ -77,8 +116,8 @@ function setupHandlers(telegrafApp, botApi) {
       const state = getUserState(chatId);
 
       if (state && (
-        (state.action === 'edit' && state.editField === 'photo_upload') ||
-        (state.action === 'add' && state.step === 5)
+          (state.action === 'edit' && state.editField === 'photo_upload') ||
+          (state.action === 'add' && state.step === 5)
       )) {
         await handleProductPhoto(botApi, msg, state);
         return;
@@ -231,7 +270,7 @@ function initBot() {
 
     app.launch({
       dropPendingUpdates: false,
-      allowedUpdates: ['message']
+      allowedUpdates: ['message', 'callback_query']
     }).then(() => {
       console.log('🤖 Telegram bot initialized');
     }).catch((error) => {
