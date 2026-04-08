@@ -17,7 +17,7 @@ function seed() {
     id: generateId(),
     name: json.name,
     category: json.category,
-    price: null,
+    price: 1500,
     description: null,
     image: json.imageFull || json.localPath || null,
     in_stock: 1,
