@@ -23,8 +23,8 @@ const categoryKeyboard = {
   reply_markup: {
     keyboard: [
       ['Рулонные', 'Вертикальные'],
-      ['Горизонтальные', 'Другое'],
-      ['❌ Отмена', '⬅️ Назад']
+      ['Горизонтальные', 'Пластиковые'],
+      ['Зебра', '⬅️ Назад']
     ],
     resize_keyboard: true
   }
@@ -84,5 +84,5 @@ module.exports = {
   editProductKeyboard,
   reviewsMenuKeyboard,
   worksMenuKeyboard,
-  productsMenuKeyboard 
+  productsMenuKeyboard
 };
