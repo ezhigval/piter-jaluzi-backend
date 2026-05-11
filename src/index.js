@@ -136,7 +136,7 @@ const server = app.listen(PORT, async () => {
   console.log('🤖 Telegram: ' + (config.telegramBotToken ? '✅' : '❌'));
   console.log('✉️ Email (outgoing): ' + (config.email.user ? '✅' : '❌'));
   console.log('📬 Email (incoming): ' + (config.incomingEmail.user ? '✅' : '❌'));
-  console.log('📨 Forward to: ' + (config.forwardEmail || 'not set'));
+  console.log('📭 Email digest: daily summary for non-actionable messages');
   console.log('📍 API: ' + config.publicApiBaseUrl + '/api\n');
   
   // Init Telegram bot

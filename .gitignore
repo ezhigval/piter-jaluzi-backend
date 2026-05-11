@@ -11,3 +11,4 @@ data/*.db
 data/*.db-shm
 data/*.db-wal
 data/*.migrated
+data/email-listener-state.json

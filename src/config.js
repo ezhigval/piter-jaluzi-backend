@@ -68,6 +68,5 @@ module.exports = {
     pass: process.env.INCOMING_EMAIL_PASS || '',
     host: process.env.INCOMING_EMAIL_HOST || '',
     port: Number(process.env.INCOMING_EMAIL_PORT) || 993
-  },
-  forwardEmail: process.env.FORWARD_EMAIL || ''
+  }
 };
